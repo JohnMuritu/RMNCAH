@@ -1,170 +1,155 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import {
-  Avatar,
-  Box,
-  Card,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography
-} from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
+import React, {Component} from 'react';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css'
+import * as ACTION_TYPES from '../../actions/actions';
+import { ButtonRenderer } from './ButtonRenderer';
 
-const ClientList = ({ customers, ...rest }) => {
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(0);
+class ClientList extends Component {
+	constructor(props) {
+		super(props);
 
-  const handleSelectAll = (event) => {
-    let newSelectedCustomerIds;
+		this.state = {
+			columnDefs: [
+				{headerName: "Client Id", field: "clientId", sortable: true, filter: true, hide: true},
+				{headerName: "Client Names", field: "fullNames", sortable: true, filter: true},
+				// {headerName: "DOB", field: "dob", sortable: true, filter: true},
 
-    if (event.target.checked) {
-      newSelectedCustomerIds = customers.map((customer) => customer.id);
-    } else {
-      newSelectedCustomerIds = [];
-    }
+        {
+          headerName: 'DOB',
+          field: 'dob',
+          valueFormatter: this.dateFormatter,
+        },
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+        {headerName: "Village", field: "village", sortable: true, filter: true},
+        {headerName: "Phone Number", field: "phoneNumber", sortable: true, filter: true},
+        {headerName: "Alternative PhoneNumber", field: "alternativePhoneNumber", sortable: true, filter: true},
+        {headerName: "HF Linked", field: "hfLinked", sortable: true, filter: true},
+        {headerName: "Other HF Attended", field: "otherHFAttended", sortable: true, filter: true},
+        {
+          headerName: '',
+          cellRenderer: 'buttonRenderer',
+          cellRendererParams: {
+            onClick: this.onBtnClick.bind(this),
+          }
+        },
+			],
+      frameworkComponents: {
+        buttonRenderer: ButtonRenderer,
+      }
+      
+      //rowData: null,
+		}
+	}
+
+  onBtnClick(e) {
+    // this.rowDataClicked = e.rowData;
+    // this.props.onSelectedRowChange(e.rowData);
+  }
+
+  dateFormatter = (params) => {
+    var dateAsString = params.data.dob;
+    var dateParts = dateAsString.split('T');
+    return `${dateParts[0]}`; // - ${dateParts[1]} - ${dateParts[2]}`;
+  }
+
+  getClientList = () => {
+    axios.get('/api/client/clientdetails')
+      .then((response) => {    
+        // this.setState({
+        //   rowData: response.data
+        // });
+        this.props.getClientList(response.data);
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+      });
+  }
+
+  componentDidMount(){
+    this.getClientList();
+  }
+
+  onButtonClick = () => {
+    const selectedNode = this.gridApi.getSelectedNodes();
+    const selectedRow = selectedNode.map(node => node.data);
+    console.log(selectedRow);
+  }
+
+  onSelectionChanged = () => {
+    var selectedRow = this.gridApi.getSelectedRows();
+    this.props.onSelectedRowChange(selectedRow[0]);
   };
 
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCustomerIds.indexOf(id);
-    let newSelectedCustomerIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(1));
-    } else if (selectedIndex === selectedCustomerIds.length - 1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(0, selectedIndex),
-        selectedCustomerIds.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedCustomerIds(newSelectedCustomerIds);
+  sizeToFit = () => {
+    this.gridApi.sizeColumnsToFit();
   };
+	
+  render() {
+    return(
+      <div
+        className="ag-theme-balham"
+        style={{
+          // width: '100%',
+          height: 400
+        }}
+      >
+        <AgGridReact
+          columnDefs={this.state.columnDefs}
+          // rowData={this.state.rowData}
+          rowData={this.props.client_list}
+          rowSelection='single'
+          onGridReady={params => this.gridApi = params.api}
+          onSelectionChanged={this.onSelectionChanged.bind(this)}
+          frameworkComponents={this.state.frameworkComponents}
+        />
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
+      </div>
+    )
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+      // update_client_list: state.main_reducer.update_client_list,
+      client_list: state.main_reducer.client_list
   };
-
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  return (
-    <Card {...rest}>
-      <PerfectScrollbar>
-        <Box sx={{ minWidth: 1050 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {/* <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
-                    color="primary"
-                    indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell> */}
-                <TableCell>
-                  Client Name
-                </TableCell>
-                <TableCell>
-                  DOB
-                </TableCell>
-                <TableCell>
-                  Village
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  HF Linked
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {customers.slice(0, limit).map((customer) => (
-                <TableRow
-                  hover
-                  key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
-                >
-                  {/* <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, customer.id)}
-                      value="true"
-                    />
-                  </TableCell> */}
-                  <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex'
-                      }}
-                    >
-                      <Avatar
-                        src={customer.avatarUrl}
-                        sx={{ mr: 2 }}
-                      >
-                        {getInitials(customer.name)}
-                      </Avatar>
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {customer.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {customer.email}
-                  </TableCell>
-                  <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
-                  </TableCell>
-                  <TableCell>
-                    {customer.phone}
-                  </TableCell>
-                  <TableCell>
-                    {moment(customer.createdAt).format('DD/MM/YYYY')}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={customers.length}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
-    </Card>
-  );
 };
 
-ClientList.propTypes = {
-  customers: PropTypes.array.isRequired
-};
+const mapDispatchToProps = (dispatch) => {
+  return {
 
-export default ClientList;
+      onSelectedRowChange: (value) => {
+          dispatch({
+              type: ACTION_TYPES.SET_CLIENT_DETAILS,
+              payload: value
+          });
+        
+          dispatch({
+            type: ACTION_TYPES.UPDATE_CLIENT_DETAILS,
+            payload: 1
+          });
+          
+          
+      },
+
+      // SetUpdateClientListToZero: () => {
+      //   dispatch({
+      //     type: ACTION_TYPES.UPDATE_CLIENT_LIST,
+      //     payload: 0
+      //   });
+      // },
+
+      getClientList: (data) => {
+        dispatch({
+          type: ACTION_TYPES.CLIENT_LIST,
+          payload: data
+        });
+      }
+
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientList);

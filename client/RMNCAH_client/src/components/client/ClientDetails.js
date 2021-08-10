@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -9,6 +9,15 @@ import {
   Grid,
   TextField
 } from '@material-ui/core';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { NotificationManager } from 'react-notifications';
+import { v4 as uuidv4 } from 'uuid';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import moment from 'moment';
+import * as ACTION_TYPES from '../../actions/actions';
 
 const states = [
   {
@@ -26,31 +35,119 @@ const states = [
 ];
 
 const ClientDetails = (props) => {
-  const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });
+
+  const dispatch = useDispatch();
+
+  const clientDetailsFetched = useSelector(state => state.main_reducer.clientDetails);
+  const update_client_details = useSelector(state => state.main_reducer.update_client_details);
+
+  const [values, setValues] = useState(clientDetailsFetched);
 
   const handleChange = (event) => {
+    if(update_client_details === 1){
+      dispatch({
+        type: ACTION_TYPES.UPDATE_CLIENT_DETAILS,
+        payload: 0
+      });
+    } 
+
     setValues({
       ...values,
       [event.target.name]: event.target.value
     });
   };
 
+  const handleDOB = (event) => {
+    if(update_client_details === 1){
+      dispatch({
+        type: ACTION_TYPES.UPDATE_CLIENT_DETAILS,
+        payload: 0
+      });
+    } 
+    //console.log('DOB - ' + new Date(moment(event).format('MM/DD/YYYY 03:00')));
+    setValues({
+      ...values,
+      dob: new Date(moment(event).format('MM/DD/YYYY 03:00'))
+    });
+
+    console.log('values - ' + JSON.stringify(values));
+  };
+
+  const handleSave = () => {
+
+    if(values.clientId === ""){
+      values.clientId = uuidv4();
+      axios.post('/api/client/addclientdetails', values)
+      .then((response) => {
+        NotificationManager.success('Saved Successfully!', '', 2000);
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+        NotificationManager.error('Error!', '', 10000);
+      });
+    }
+    else{
+      axios.post('/api/client/updateclientdetails', values)
+      .then((response) => {
+        NotificationManager.success('Updated Successfully!', '', 2000);
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+        NotificationManager.error('Error!', '', 10000);
+      });
+    }
+    
+    dispatch({
+      type: ACTION_TYPES.SET_CLIENT_DETAILS,
+      payload: values
+    });
+
+    axios.get('/api/client/clientdetails')
+      .then((response) => {    
+        dispatch({
+          type: ACTION_TYPES.CLIENT_LIST,
+          payload: response.data
+        });
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+      });   
+
+  };
+
+  const resetClientDetails = () => {
+    dispatch({
+      type: ACTION_TYPES.UPDATE_CLIENT_DETAILS,
+      payload: 0
+    });
+
+    setValues({
+      clientId: '',
+      fullNames: '',
+      dob: new Date(),
+      village: '',
+      phoneNumber: '',
+      alternativePhoneNumber: '',
+      hfLinked: '',
+      otherHFAttended: ''
+    });
+    
+  };
+
+  useEffect(() => {
+    if(update_client_details === 1){
+      setValues(clientDetailsFetched);
+    }
+    
+  });
+
   return (
     <form
+      onSubmit={handleSave}
       autoComplete="off"
-      noValidate
-      {...props}
     >
       <Card>
         <CardHeader
-          subheader="Enter client details"
           title="Client Details"
         />
         <Divider />
@@ -64,14 +161,17 @@ const ClientDetails = (props) => {
               md={4}
               xs={12}
             >
-              <TextField
+              <TextField            
                 fullWidth
                 label="Full names"
                 name="fullNames"
                 onChange={handleChange}
+                // onBlur={handleBlur}
                 required
                 value={values.fullNames}
                 variant="outlined"
+                // helperText={touched.fullNames && errors.fullNames}
+                // error={Boolean(touched.fullNames && errors.fullNames)}
               />
             </Grid>
             <Grid
@@ -79,20 +179,38 @@ const ClientDetails = (props) => {
               md={4}
               xs={12}
             >
-              <TextField
+              {/* <TextField
                 fullWidth
                 label="Date of Birth"
-                name="dob"
+                name="dobDate"
                 type="date"
-                format="dd/MM/yyyy"
                 onChange={handleChange}
                 required
-                value={values.dob}
+                value={values.dobDate}
                 variant="outlined"
                 InputLabelProps={{
                   shrink: true,
                 }}
-              />
+              /> */}
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  fullWidth
+                  autoOk
+                  disableFuture={true}
+                  variant="inline"
+                  inputVariant="outlined"
+                  label="Date of Birth"
+                  format="dd-MMM-yyyy"
+                  value={values.dob}
+                  InputAdornmentProps={{ position: "end" }}
+                  onChange={handleDOB}
+                  KeyboardButtonProps={{
+                    'aria-label':'Date of birth'
+                  }}
+                  required
+                />
+              </MuiPickersUtilsProvider>
+
             </Grid>
             <Grid
               item
@@ -116,10 +234,10 @@ const ClientDetails = (props) => {
               <TextField
                 fullWidth
                 label="Phone Number"
-                name="phone"
+                name="phoneNumber"
                 onChange={handleChange}
                 type="number"
-                value={values.phone}
+                value={values.phoneNumber}
                 variant="outlined"
               />
             </Grid>
@@ -131,9 +249,9 @@ const ClientDetails = (props) => {
               <TextField
                 fullWidth
                 label="Alternative Phone number"
-                name="alternativePhone"
+                name="alternativePhoneNumber"
                 onChange={handleChange}
-                value={values.alternativePhone}
+                value={values.alternativePhoneNumber}
                 variant="outlined"
               />
             </Grid>
@@ -145,12 +263,12 @@ const ClientDetails = (props) => {
               <TextField
                 fullWidth
                 label="HF Linked"
-                name="facility"
+                name="hfLinked"
                 onChange={handleChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.facility}
+                value={values.hfLinked}
                 variant="outlined"
               >
                 {states.map((option) => (
@@ -171,9 +289,9 @@ const ClientDetails = (props) => {
               <TextField
                 fullWidth
                 label="Other HF attended"
-                name="otherFacility"
+                name="otherHFAttended"
                 onChange={handleChange}
-                value={values.otherFacility}
+                value={values.otherHFAttended}
                 variant="outlined"
               />
             </Grid>
@@ -190,6 +308,18 @@ const ClientDetails = (props) => {
           <Button
             color="primary"
             variant="contained"
+            onClick={() => resetClientDetails()}
+            style={{marginRight: 5}}
+          >
+            Reset
+          </Button>
+
+          <Button
+            color="primary"
+            type="submit"
+            variant="contained"
+            //onClick={() => handleSave()}
+            // onClick={() => e.preventDefault()}
           >
             Save details
           </Button>

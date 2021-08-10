@@ -31,7 +31,7 @@ const Login = () => {
     // If everything is okay
     // if (username.trim() && password.trim()) {
     // setLoading(true);
-    axios.post('https://localhost:44346/api/user/signin', data)
+    axios.post('/api/user/signin', data)
       .then((response) => {
         NotificationManager.success('Login Successful!', '', 2000);
         dispatch({
@@ -39,7 +39,7 @@ const Login = () => {
           payload: response.data
         });
         // var userData = jwt.decode(response.data);
-        console.log(`success : ${response.data}`);
+        // console.log(`success : ${response.data}`);
         navigate('/app/registerclient');
       })
       .catch((error) => {
@@ -187,7 +187,6 @@ const Login = () => {
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
-                    disabled={isSubmitting}
                     fullWidth
                     size="large"
                     type="submit"

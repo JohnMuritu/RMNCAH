@@ -75,7 +75,8 @@ namespace RMNCAH_api
                     };
                 });
 
-            services.AddControllers();
+            // services.AddControllers();
+            services.AddControllersWithViews();
 
             //token lifespan - e.g. for tokens sent to users to change pwd
             services.Configure<DataProtectionTokenProviderOptions>(o =>

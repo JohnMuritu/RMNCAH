@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import ClientDetails from 'src/components/client/ClientDetails';
 import ClientList from 'src/components/client/ClientList';
-import customers from 'src/__mocks__/customers';
+//import customers from 'src/__mocks__/customers';
 
 const RegisterClient = () => (
   <>
@@ -40,7 +40,7 @@ const RegisterClient = () => (
             md={12}
             xs={12}
           >
-            <ClientList  customers={customers} />
+            <ClientList />
           </Grid>
         </Grid>
       </Container>

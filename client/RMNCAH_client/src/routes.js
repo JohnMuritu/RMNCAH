@@ -11,6 +11,8 @@ import NotFound from 'src/pages/NotFound';
 import ProductList from 'src/pages/ProductList';
 import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
+import InlineDatePickerDemo from './components/client/InlineDatePickerDemo';
+import Test from './components/client/Test';
 
 const routes = (isLoggedIn) => [
   {
@@ -21,9 +23,9 @@ const routes = (isLoggedIn) => [
       { path: 'registerclient', element: <RegisterClient /> },
       { path: 'clientClinicalDetails', element: <ClientClinicalDetailsPage /> },
       { path: 'account', element: <Account /> },
-      { path: 'customers', element: <CustomerList /> },
+      { path: 'customers', element: <Test /> },
       { path: 'dashboard', element: <Dashboard /> },
-      { path: 'products', element: <ProductList /> },
+      { path: 'products', element: <InlineDatePickerDemo /> },
       { path: 'settings', element: <Settings /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]

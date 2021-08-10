@@ -24,6 +24,15 @@ namespace RMNCAH_api.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet("ClientDetails")]
+        public List<ClientDetails> getClientDetails()
+        {
+            using (_applicationDbContext)
+            {
+                return _applicationDbContext.ClientDetails.OrderBy(c => c.FullNames).ToList();
+            }
+        }
+
         [HttpPost("AddClientDetails")]
         public ClientDetails AddClientDetails(ClientDetails cd)
         {
