@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Avatar,
@@ -19,15 +20,10 @@ import {
   ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
   UserPlus as UserPlusIcon,
-  Users as UsersIcon
+  Users as UsersIcon,
+  Book
 } from 'react-feather';
 import NavItem from './NavItem';
-
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
 
 const items = [
   // {
@@ -37,48 +33,51 @@ const items = [
   // },
   {
     href: '/app/registerclient',
+    icon: Book,
+    title: 'Clients'
+  },
+  // {
+  //   href: '/app/clientClinicalDetails',
+  //   icon: UsersIcon,
+  //   title: 'Client Clinical Details'
+  // },
+  {
+    href: '/app/reports',
     icon: BarChartIcon,
-    title: 'Register Client'
-  },
-  {
-    href: '/app/clientClinicalDetails',
-    icon: UsersIcon,
-    title: 'Client Clinical Details'
-  },
-  {
-    href: '/app/products',
-    icon: ShoppingBagIcon,
-    title: 'Products'
+    title: 'Reports'
   },
   {
     href: '/app/account',
     icon: UserIcon,
     title: 'Account'
   },
+  // {
+  //   href: '/app/settings',
+  //   icon: SettingsIcon,
+  //   title: 'Settings'
+  // },
+  // {
+  //   href: '/login',
+  //   icon: LockIcon,
+  //   title: 'Login'
+  // },
   {
-    href: '/app/settings',
-    icon: SettingsIcon,
-    title: 'Settings'
-  },
-  {
-    href: '/login',
-    icon: LockIcon,
-    title: 'Login'
-  },
-  {
-    href: '/register',
+    href: '/app/adduser',
     icon: UserPlusIcon,
-    title: 'Register'
-  },
-  {
-    href: '/404',
-    icon: AlertCircleIcon,
-    title: 'Error'
+    title: 'Add User'
   }
+  // {
+  //   href: '/404',
+  //   icon: AlertCircleIcon,
+  //   title: 'Error'
+  // }
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
+  const firstName = useSelector((state) => state.main_reducer.user.FirstName);
+  const lastName = useSelector((state) => state.main_reducer.user.LastName);
+  const jobTitle = useSelector((state) => state.main_reducer.user.JobTitle);
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -104,7 +103,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       >
         <Avatar
           component={RouterLink}
-          src={user.avatar}
+          src="/static/images/avatars/avatar_6.png"
           sx={{
             cursor: 'pointer',
             width: 64,
@@ -112,17 +111,11 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           }}
           to="/app/account"
         />
-        <Typography
-          color="textPrimary"
-          variant="h5"
-        >
-          {user.name}
+        <Typography color="textPrimary" variant="h5">
+          {firstName} {lastName}
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {user.jobTitle}
+        <Typography color="textSecondary" variant="body2">
+          {jobTitle}
         </Typography>
       </Box>
       <Divider />
@@ -139,7 +132,6 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         </List>
       </Box>
       <Box sx={{ flexGrow: 1 }} />
-      
     </Box>
   );
 
@@ -186,7 +178,7 @@ DashboardSidebar.propTypes = {
 };
 
 DashboardSidebar.defaultProps = {
-  onMobileClose: () => { },
+  onMobileClose: () => {},
   openMobile: false
 };
 

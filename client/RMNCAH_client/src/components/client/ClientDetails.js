@@ -10,190 +10,184 @@ import {
   TextField
 } from '@material-ui/core';
 import axios from 'axios';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import { v4 as uuidv4 } from 'uuid';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from '@material-ui/pickers';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { alpha } from '@material-ui/core/styles';
 import moment from 'moment';
 import * as ACTION_TYPES from '../../actions/actions';
-
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
-];
+import { date } from 'date-fns/locale/af';
 
 const ClientDetails = (props) => {
-
   const dispatch = useDispatch();
 
-  const clientDetailsFetched = useSelector(state => state.main_reducer.clientDetails);
-  const update_client_details = useSelector(state => state.main_reducer.update_client_details);
+  const clientDetailsFetched = useSelector(
+    (state) => state.main_reducer.clientDetails
+  );
+  const updateComponent = useSelector(
+    (state) => state.main_reducer.update_component
+  );
+  // const update_client_details = useSelector(state => state.main_reducer.update_client_details);
 
-  const [values, setValues] = useState(clientDetailsFetched);
+  const [healthFacilities, setHealthFacilities] = useState([]);
+  const [healthFacilitiesFetched, setHealthFacilitiesFetched] = useState(false);
 
-  const handleChange = (event) => {
-    if(update_client_details === 1){
-      dispatch({
-        type: ACTION_TYPES.UPDATE_CLIENT_DETAILS,
-        payload: 0
-      });
-    } 
+  const handleSave = (clientDetails) => {
+    if (clientDetails.clientId === '') {
+      clientDetails.clientId = uuidv4();
+      console.log(clientDetails);
+      axios
+        .post('/api/client/addclientdetails', clientDetails)
+        .then((response) => {
+          NotificationManager.success('Saved Successfully!', '', 2000);
+          formik.resetForm();
 
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  };
+          dispatch({
+            type: ACTION_TYPES.UPDATE_COMPONENT
+          });
+        })
+        .catch((error) => {
+          console.log(`error : ${error}`);
+          NotificationManager.error('Error Save!', '', 10000);
+        });
+    } else {
+      console.log(clientDetails);
+      axios
+        .post('/api/client/updateclientdetails', clientDetails)
+        .then((response) => {
+          NotificationManager.success('Updated Successfully!', '', 2000);
 
-  const handleDOB = (event) => {
-    if(update_client_details === 1){
-      dispatch({
-        type: ACTION_TYPES.UPDATE_CLIENT_DETAILS,
-        payload: 0
-      });
-    } 
-    //console.log('DOB - ' + new Date(moment(event).format('MM/DD/YYYY 03:00')));
-    setValues({
-      ...values,
-      dob: new Date(moment(event).format('MM/DD/YYYY 03:00'))
-    });
-
-    console.log('values - ' + JSON.stringify(values));
-  };
-
-  const handleSave = () => {
-
-    if(values.clientId === ""){
-      values.clientId = uuidv4();
-      axios.post('/api/client/addclientdetails', values)
-      .then((response) => {
-        NotificationManager.success('Saved Successfully!', '', 2000);
-      })
-      .catch((error) => {
-        console.log(`error : ${error}`);
-        NotificationManager.error('Error!', '', 10000);
-      });
+          dispatch({
+            type: ACTION_TYPES.UPDATE_COMPONENT
+          });
+        })
+        .catch((error) => {
+          console.log(`error : ${error}`);
+          NotificationManager.error('Error Update!', '', 10000);
+        });
     }
-    else{
-      axios.post('/api/client/updateclientdetails', values)
-      .then((response) => {
-        NotificationManager.success('Updated Successfully!', '', 2000);
-      })
-      .catch((error) => {
-        console.log(`error : ${error}`);
-        NotificationManager.error('Error!', '', 10000);
-      });
-    }
-    
+
     dispatch({
       type: ACTION_TYPES.SET_CLIENT_DETAILS,
-      payload: values
+      payload: clientDetails
     });
+  };
 
-    axios.get('/api/client/clientdetails')
-      .then((response) => {    
-        dispatch({
-          type: ACTION_TYPES.CLIENT_LIST,
-          payload: response.data
-        });
+  const getHealthFacilities = () => {
+    axios
+      .get('/api/healthfacility')
+      .then((response) => {
+        setHealthFacilities(response.data);
+        console.log('fetching facilities');
+        setHealthFacilitiesFetched(true);
       })
       .catch((error) => {
         console.log(`error : ${error}`);
-      });   
-
-  };
-
-  const resetClientDetails = () => {
-    dispatch({
-      type: ACTION_TYPES.UPDATE_CLIENT_DETAILS,
-      payload: 0
-    });
-
-    setValues({
-      clientId: '',
-      fullNames: '',
-      dob: new Date(),
-      village: '',
-      phoneNumber: '',
-      alternativePhoneNumber: '',
-      hfLinked: '',
-      otherHFAttended: ''
-    });
-    
+      });
   };
 
   useEffect(() => {
-    if(update_client_details === 1){
-      setValues(clientDetailsFetched);
+    formik.setValues(clientDetailsFetched);
+    if (!healthFacilitiesFetched) {
+      getHealthFacilities();
     }
-    
+  }, [clientDetailsFetched, updateComponent]);
+
+  const SignupSchema = Yup.object().shape({
+    fullNames: Yup.string().required(),
+    dob: Yup.date().required('Required')
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      clientId: '',
+      chvName: '',
+      deptClientId: '',
+      fullNames: '',
+      dob: null,
+      village: '',
+      phoneNumber: '',
+      alternativePhoneNumber: '',
+      hfLinked: {
+        mflCode: null,
+        facilityName: ''
+      },
+      otherHFAttended: ''
+    },
+    onSubmit: (values) => {
+      handleSave(values);
+    },
+    validationSchema: SignupSchema,
+    enableReinitialize: true
   });
 
   return (
-    <form
-      onSubmit={handleSave}
-      autoComplete="off"
-    >
+    <form onSubmit={formik.handleSubmit}>
       <Card>
-        <CardHeader
-          title="Client Details"
-        />
+        <CardHeader title="Client Details" />
         <Divider />
         <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
-              <TextField            
+          <Grid container spacing={3}>
+            <Grid item md={4} xs={12}>
+              <TextField
+                fullWidth
+                label="CHV Name"
+                name="chvName"
+                onChange={formik.handleChange}
+                // onBlur={handleBlur}
+                value={formik.values.chvName}
+                variant="outlined"
+                helperText={formik.touched.chvName && formik.errors.chvName}
+                error={Boolean(formik.touched.chvName && formik.errors.chvName)}
+              />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <TextField
+                fullWidth
+                label="Client ID (MFL/SR/Year)"
+                name="deptClientId"
+                onChange={formik.handleChange}
+                // onBlur={handleBlur}
+                value={formik.values.deptClientId}
+                variant="outlined"
+                helperText={
+                  formik.touched.deptClientId && formik.errors.deptClientId
+                }
+                error={Boolean(
+                  formik.touched.deptClientId && formik.errors.deptClientId
+                )}
+              />
+            </Grid>
+
+            <Grid item md={4} xs={12}>
+              <TextField
                 fullWidth
                 label="Full names"
                 name="fullNames"
-                onChange={handleChange}
+                onChange={formik.handleChange}
                 // onBlur={handleBlur}
-                required
-                value={values.fullNames}
+                value={formik.values.fullNames}
                 variant="outlined"
-                // helperText={touched.fullNames && errors.fullNames}
-                // error={Boolean(touched.fullNames && errors.fullNames)}
+                helperText={formik.touched.fullNames && formik.errors.fullNames}
+                error={Boolean(
+                  formik.touched.fullNames && formik.errors.fullNames
+                )}
               />
             </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
-              {/* <TextField
-                fullWidth
-                label="Date of Birth"
-                name="dobDate"
-                type="date"
-                onChange={handleChange}
-                required
-                value={values.dobDate}
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              /> */}
+            <Grid item md={4} xs={12}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
+                  helperText={formik.touched.dob && formik.errors.dob}
+                  error={Boolean(formik.touched.dob && formik.errors.dob)}
                   fullWidth
                   autoOk
                   disableFuture={true}
@@ -201,97 +195,72 @@ const ClientDetails = (props) => {
                   inputVariant="outlined"
                   label="Date of Birth"
                   format="dd-MMM-yyyy"
-                  value={values.dob}
-                  InputAdornmentProps={{ position: "end" }}
-                  onChange={handleDOB}
-                  KeyboardButtonProps={{
-                    'aria-label':'Date of birth'
+                  value={formik.values.dob}
+                  InputAdornmentProps={{ position: 'end' }}
+                  onChange={(val) => {
+                    formik.setFieldValue('dob', val);
                   }}
-                  required
+                  KeyboardButtonProps={{
+                    'aria-label': 'Date of birth'
+                  }}
                 />
               </MuiPickersUtilsProvider>
-
             </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
+            <Grid item md={4} xs={12}>
               <TextField
                 fullWidth
                 label="Village"
                 name="village"
-                onChange={handleChange}
-                value={values.village}
+                onChange={formik.handleChange}
+                value={formik.values.village}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
+            <Grid item md={4} xs={12}>
               <TextField
                 fullWidth
                 label="Phone Number"
                 name="phoneNumber"
-                onChange={handleChange}
-                type="number"
-                value={values.phoneNumber}
+                onChange={formik.handleChange}
+                value={formik.values.phoneNumber}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
+            <Grid item md={4} xs={12}>
               <TextField
                 fullWidth
                 label="Alternative Phone number"
                 name="alternativePhoneNumber"
-                onChange={handleChange}
-                value={values.alternativePhoneNumber}
+                onChange={formik.handleChange}
+                value={formik.values.alternativePhoneNumber}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
-              <TextField
+            <Grid item md={4} xs={12}>
+              <Autocomplete
                 fullWidth
-                label="HF Linked"
+                disableClearable
+                forcePopupIcon={false}
                 name="hfLinked"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.hfLinked}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+                // freeSolo
+                value={formik.values.hfLinked}
+                options={healthFacilities}
+                getOptionLabel={(option) => option.facilityName}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue('hfLinked', newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="HF Linked" variant="outlined" />
+                )}
+              />
             </Grid>
-            <Grid
-              item
-              md={4}
-              xs={12}
-            >
+            <Grid item md={4} xs={12}>
               <TextField
                 fullWidth
                 label="Other HF attended"
                 name="otherHFAttended"
-                onChange={handleChange}
-                value={values.otherHFAttended}
+                onChange={formik.handleChange}
+                value={formik.values.otherHFAttended}
                 variant="outlined"
               />
             </Grid>
@@ -308,8 +277,8 @@ const ClientDetails = (props) => {
           <Button
             color="primary"
             variant="contained"
-            onClick={() => resetClientDetails()}
-            style={{marginRight: 5}}
+            onClick={() => formik.resetForm()}
+            style={{ marginRight: 5 }}
           >
             Reset
           </Button>

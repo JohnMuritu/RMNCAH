@@ -22,29 +22,27 @@ import * as ACTION_TYPES from '../actions/actions';
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [username, setUsername] = useState('admin@myemail.com');
-  const [password, setPassword] = useState('Password123');
-  const handleLogin = () => {
-    // validate();
-    // return function () {
-    const data = { username, password };
-    // If everything is okay
-    // if (username.trim() && password.trim()) {
-    // setLoading(true);
-    axios.post('/api/user/signin', data)
+
+  const handleLogin = (values) => {
+    console.log(values);
+    axios
+      .post('/api/user/signin', values)
       .then((response) => {
         NotificationManager.success('Login Successful!', '', 2000);
         dispatch({
           type: ACTION_TYPES.AUTHENTICATION,
           payload: response.data
         });
-        // var userData = jwt.decode(response.data);
-        // console.log(`success : ${response.data}`);
+
         navigate('/app/registerclient');
       })
       .catch((error) => {
         console.log(`error : ${error}`);
-        NotificationManager.error('Your account has been disabled. Please contact help@chi-sa.org for assistance', '', 10000);
+        NotificationManager.error(
+          'Error. Kindly contact your systems administrator',
+          '',
+          5000
+        );
       });
   };
 
@@ -65,107 +63,42 @@ const Login = () => {
         <Container maxWidth="sm">
           <Formik
             initialValues={{
-              email: 'admin@myemail.c',
-              password: 'Password123'
+              username: '',
+              password: ''
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+              username: Yup.string().required('Username is required'),
               password: Yup.string().max(255).required('Password is required')
             })}
-            onSubmit={() => {
-              handleLogin();
-              // navigate('/app/dashboard', { replace: true });
+            onSubmit={(values) => {
+              handleLogin(values);
             }}
           >
             {({
               errors,
               handleBlur,
-              // handleChange,
+              handleChange,
               handleSubmit,
               isSubmitting,
               touched,
-              // values
+              values
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box sx={{ mb: 3 }}>
-                  <Typography
-                    color="textPrimary"
-                    variant="h2"
-                  >
+                  <Typography color="textPrimary" variant="h2">
                     Sign in
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    variant="body2"
-                  >
-                    Sign in on the internal platform
-                  </Typography>
-                </Box>
-                <Grid
-                  container
-                  spacing={3}
-                >
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                  >
-                    <Button
-                      color="primary"
-                      fullWidth
-                      startIcon={<FacebookIcon />}
-                      onClick={handleSubmit}
-                      size="large"
-                      variant="contained"
-                    >
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                  >
-                    <Button
-                      fullWidth
-                      startIcon={<GoogleIcon />}
-                      onClick={handleSubmit}
-                      size="large"
-                      variant="contained"
-                    >
-                      Login with Google
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Box
-                  sx={{
-                    pb: 1,
-                    pt: 3
-                  }}
-                >
-                  <Typography
-                    align="center"
-                    color="textSecondary"
-                    variant="body1"
-                  >
-                    or login with email address
                   </Typography>
                 </Box>
                 <TextField
-                  error={Boolean(touched.email && errors.email)}
+                  error={Boolean(touched.username && errors.username)}
                   fullWidth
-                  helperText={touched.email && errors.email}
-                  label="Email Address"
+                  helperText={touched.username && errors.username}
+                  label="Username"
                   margin="normal"
-                  name="email"
+                  name="username"
                   onBlur={handleBlur}
-                  onChange={(e) => {
-                    setUsername(e.target.value);
-                    // handleChange(e);
-                  }}
-                  type="email"
-                  value={username}
+                  onChange={handleChange}
+                  value={values.username}
                   variant="outlined"
                 />
                 <TextField
@@ -176,12 +109,9 @@ const Login = () => {
                   margin="normal"
                   name="password"
                   onBlur={handleBlur}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    // handleChange(e);
-                  }}
+                  onChange={handleChange}
                   type="password"
-                  value={password}
+                  value={values.password}
                   variant="outlined"
                 />
                 <Box sx={{ py: 2 }}>
@@ -195,20 +125,6 @@ const Login = () => {
                     Sign in now
                   </Button>
                 </Box>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  Don&apos;t have an account?
-                  {' '}
-                  <Link
-                    component={RouterLink}
-                    to="/register"
-                    variant="h6"
-                  >
-                    Sign up
-                  </Link>
-                </Typography>
               </form>
             )}
           </Formik>

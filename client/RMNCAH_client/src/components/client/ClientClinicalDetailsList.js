@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import moment from 'moment';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -10,18 +11,20 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { ButtonRenderer } from './ButtonRenderer';
 import * as ACTION_TYPES from '../../actions/actions';
 
-const ClientList = (props) => {
+const ClientClinicalDetailsList = (props) => {
   const dispatch = useDispatch();
-  const [rowData, setRowData] = useState([]);
-  const [gridApi, setGridApi] = useState(null);
-
+  const clientId = useSelector(
+    (state) => state.main_reducer.clientDetails.clientId
+  );
   const updateComponent = useSelector(
     (state) => state.main_reducer.update_component
   );
+  const [rowData, setRowData] = useState([]);
+  const [gridApi, setGridApi] = useState(null);
 
   const getClientList = () => {
     axios
-      .get('/api/client/clientdetails')
+      .get(`/api/client/ClientClinicalDetails/${clientId}`)
       .then((response) => {
         setRowData(response.data);
       })
@@ -32,14 +35,14 @@ const ClientList = (props) => {
 
   const onGridReady = (params) => {
     setGridApi(params.api);
-    params.api.sizeColumnsToFit();
+    // params.api.sizeColumnsToFit();
   };
 
   const onSelectionChanged = () => {
     var selectedRow = gridApi.getSelectedRows();
     console.log(selectedRow);
     dispatch({
-      type: ACTION_TYPES.SET_CLIENT_DETAILS,
+      type: ACTION_TYPES.SET_CLIENT_CLINICAL_DETAILS,
       payload: selectedRow[0]
     });
     // document.querySelector('#selectedRows').innerHTML =
@@ -49,6 +52,12 @@ const ClientList = (props) => {
   useEffect(() => {
     getClientList();
   }, [updateComponent]);
+
+  function dateFormatter(params) {
+    if (params.value !== null) {
+      return moment(params.value).format('DD-MMM-YYYY');
+    }
+  }
 
   // function formatNumber(number) {
   //   // this puts commas into the number eg 1000 goes to 1,000,
@@ -80,63 +89,104 @@ const ClientList = (props) => {
           buttonRenderer: ButtonRenderer
         }}
       >
+        <AgGridColumn
+          field="clientClinicalDetailsId"
+          hide={true}
+        ></AgGridColumn>
         <AgGridColumn field="clientId" hide={true}></AgGridColumn>
         <AgGridColumn
-          field="chvName"
-          headerName="CHV Name"
+          field="babyName"
+          headerName="Baby Name"
           sortable={true}
           filter={true}
         ></AgGridColumn>
         <AgGridColumn
-          field="deptClientId"
-          headerName="Client ID"
+          field="anc1"
+          headerName="ANC1"
           sortable={true}
           filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
-          field="fullNames"
+          field="anc2"
+          headerName="ANC2"
           sortable={true}
           filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
-          field="dob"
-          headerName="DOB"
+          field="anc3"
+          headerName="ANC3"
           sortable={true}
           filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
-          field="village"
-          headerName="Village"
+          field="anc4"
+          headerName="ANC4"
           sortable={true}
           filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
-          field="phoneNumber"
+          field="anc5"
+          headerName="ANC5"
           sortable={true}
           filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
-          field="alternativePhoneNumber"
-          headerName="Other Phone No"
+          field="edd"
+          headerName="EDD"
           sortable={true}
           filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
-          field="hfLinked.facilityName"
-          headerName="Health Facility"
+          field="sba"
+          headerName="SBA"
           sortable={true}
           filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
-          field="otherHFAttended"
-          headerName="Other Health Facility"
+          field="penta1"
+          headerName="PENTA1"
+          sortable={true}
+          filter={true}
+          valueFormatter={dateFormatter}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="penta2"
+          headerName="PENTA2"
+          sortable={true}
+          filter={true}
+          valueFormatter={dateFormatter}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="penta3"
+          headerName="PENTA3"
+          sortable={true}
+          filter={true}
+          valueFormatter={dateFormatter}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="mr1"
+          headerName="MR1"
+          sortable={true}
+          filter={true}
+          valueFormatter={dateFormatter}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="remarks"
+          headerName="Remarks"
           sortable={true}
           filter={true}
         ></AgGridColumn>
-        <AgGridColumn field="" width={135} cellRenderer="buttonRenderer" />
+        {/* <AgGridColumn field="" width={135} cellRenderer="buttonRenderer" /> */}
       </AgGridReact>
     </div>
   );
 };
 
-export default ClientList;
+export default ClientClinicalDetailsList;

@@ -8,6 +8,8 @@ const initialState = {
   authenticated: false,
   clientDetails: {
     clientId: '',
+    chvName: '',
+    deptClientId: '',
     fullNames: '',
     dob: '',
     village: '',
@@ -16,15 +18,34 @@ const initialState = {
     hfLinked: '',
     otherHFAttended: ''
   },
-  update_client_details: 1,
+  clientClinicalDetails: {
+    clientClinicalDetailsId: '',
+    clientId: '',
+    babyName: '',
+    anc1: null,
+    anc2: null,
+    anc3: null,
+    anc4: null,
+    anc5: null,
+    edd: null,
+    sba: null,
+    penta1: null,
+    penta2: null,
+    penta3: null,
+    mr1: null,
+    remarks: ''
+  },
   update_client_list: 0,
-  client_list: []
+  client_list: [],
+  update_component: 0,
+  dateFrom: null,
+  dateTo: null
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTION_TYPES.AUTHENTICATION:
-      return { 
+      return {
         ...state,
         userToken: action.payload,
         user: jwt.decode(action.payload),
@@ -32,16 +53,25 @@ const reducer = (state = initialState, action) => {
       };
 
     case ACTION_TYPES.SET_CLIENT_DETAILS:
-      return {...state, clientDetails: action.payload};
-    
-    case ACTION_TYPES.UPDATE_CLIENT_DETAILS:
-      return {...state, update_client_details: action.payload};
+      return { ...state, clientDetails: action.payload };
+
+    case ACTION_TYPES.SET_CLIENT_CLINICAL_DETAILS:
+      return { ...state, clientClinicalDetails: action.payload };
 
     case ACTION_TYPES.UPDATE_CLIENT_LIST:
-      return {...state, update_client_list: action.payload};
+      return { ...state, update_client_list: action.payload };
 
     case ACTION_TYPES.CLIENT_LIST:
-      return {...state, client_list: action.payload};
+      return { ...state, client_list: action.payload };
+
+    case ACTION_TYPES.UPDATE_COMPONENT:
+      return { ...state, update_component: Math.random() };
+
+    case ACTION_TYPES.DATE_FROM:
+      return { ...state, dateFrom: action.payload };
+
+    case ACTION_TYPES.DATE_TO:
+      return { ...state, dateTo: action.payload };
 
     case ACTION_TYPES.LOG_OUT:
       return initialState;

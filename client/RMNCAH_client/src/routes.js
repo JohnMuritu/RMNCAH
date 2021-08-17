@@ -13,6 +13,7 @@ import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
 import InlineDatePickerDemo from './components/client/InlineDatePickerDemo';
 import Test from './components/client/Test';
+import ReportsPage from './pages/ReportsPage';
 
 const routes = (isLoggedIn) => [
   {
@@ -23,10 +24,12 @@ const routes = (isLoggedIn) => [
       { path: 'registerclient', element: <RegisterClient /> },
       { path: 'clientClinicalDetails', element: <ClientClinicalDetailsPage /> },
       { path: 'account', element: <Account /> },
+      { path: 'adduser', element: <Register /> },
       { path: 'customers', element: <Test /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'products', element: <InlineDatePickerDemo /> },
       { path: 'settings', element: <Settings /> },
+      { path: 'reports', element: <ReportsPage /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
@@ -35,7 +38,7 @@ const routes = (isLoggedIn) => [
     element: <MainLayout />,
     children: [
       { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> },
+      // { path: 'register', element: <Register /> },
       { path: '404', element: <NotFound /> },
       { path: '/', element: <Navigate to="/app/registerclient" /> },
       { path: '*', element: <Navigate to="/404" /> }

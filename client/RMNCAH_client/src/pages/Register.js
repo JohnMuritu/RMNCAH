@@ -12,9 +12,24 @@ import {
   TextField,
   Typography
 } from '@material-ui/core';
+import axios from 'axios';
+import { NotificationManager } from 'react-notifications';
 
 const Register = () => {
   const navigate = useNavigate();
+
+  const handleRegistration = (values) => {
+    axios
+      .post('/api/user/signup', values)
+      .then((response) => {
+        NotificationManager.success('Registration Successful!', '', 2000);
+        // navigate('/app/registerclient');
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+        NotificationManager.error('Error occured!!!', '', 2000);
+      });
+  };
 
   return (
     <>
@@ -33,23 +48,45 @@ const Register = () => {
         <Container maxWidth="sm">
           <Formik
             initialValues={{
+              username: '',
               email: '',
               firstName: '',
               lastName: '',
+              jobTitle: '',
               password: '',
-              policy: false
+              confirmPassword: ''
             }}
-            validationSchema={
-              Yup.object().shape({
-                email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                firstName: Yup.string().max(255).required('First name is required'),
-                lastName: Yup.string().max(255).required('Last name is required'),
-                password: Yup.string().max(255).required('password is required'),
-                policy: Yup.boolean().oneOf([true], 'This field must be checked')
-              })
-            }
-            onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
+            validationSchema={Yup.object().shape({
+              username: Yup.string().max(255).required('Last name is required'),
+              email: Yup.string()
+                .email('Must be a valid email')
+                .max(255)
+                .required('Email is required'),
+              firstName: Yup.string()
+                .max(255)
+                .required('First name is required'),
+              password: Yup.string()
+                .min(6, 'Minimum 6 characters long')
+                .max(255)
+                .required('password is required')
+                .matches(
+                  /^.*(?=.{6,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+                  'Password must contain at least 6 characters, one uppercase, one number and one special case character'
+                ),
+              confirmPassword: Yup.string()
+                .required('Please confirm your password')
+                .when('password', {
+                  is: (password) =>
+                    password && password.length > 0 ? true : false,
+                  then: Yup.string().oneOf(
+                    [Yup.ref('password')],
+                    "Password doesn't match"
+                  )
+                })
+            })}
+            onSubmit={(values) => {
+              handleRegistration(values);
+              // navigate('/app/dashboard', { replace: true });
             }}
           >
             {({
@@ -63,20 +100,22 @@ const Register = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box sx={{ mb: 3 }}>
-                  <Typography
-                    color="textPrimary"
-                    variant="h2"
-                  >
+                  <Typography color="textPrimary" variant="h2">
                     Create new account
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    variant="body2"
-                  >
-                    Use your email to create new account
-                  </Typography>
                 </Box>
+                <TextField
+                  error={Boolean(touched.username && errors.username)}
+                  fullWidth
+                  helperText={touched.username && errors.username}
+                  label="Username"
+                  margin="normal"
+                  name="username"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.username}
+                  variant="outlined"
+                />
                 <TextField
                   error={Boolean(touched.firstName && errors.firstName)}
                   fullWidth
@@ -99,6 +138,18 @@ const Register = () => {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.lastName}
+                  variant="outlined"
+                />
+                <TextField
+                  error={Boolean(touched.jobTitle && errors.jobTitle)}
+                  fullWidth
+                  helperText={touched.jobTitle && errors.jobTitle}
+                  label="Job Title"
+                  margin="normal"
+                  name="jobTitle"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.jobTitle}
                   variant="outlined"
                 />
                 <TextField
@@ -127,66 +178,34 @@ const Register = () => {
                   value={values.password}
                   variant="outlined"
                 />
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    ml: -1
-                  }}
-                >
-                  <Checkbox
-                    checked={values.policy}
-                    name="policy"
-                    onChange={handleChange}
-                  />
-                  <Typography
-                    color="textSecondary"
-                    variant="body1"
-                  >
-                    I have read the
-                    {' '}
-                    <Link
-                      color="primary"
-                      component={RouterLink}
-                      to="#"
-                      underline="always"
-                      variant="h6"
-                    >
-                      Terms and Conditions
-                    </Link>
-                  </Typography>
-                </Box>
-                {Boolean(touched.policy && errors.policy) && (
-                  <FormHelperText error>
-                    {errors.policy}
-                  </FormHelperText>
-                )}
+                <TextField
+                  error={Boolean(
+                    touched.confirmPassword && errors.confirmPassword
+                  )}
+                  fullWidth
+                  helperText={touched.confirmPassword && errors.confirmPassword}
+                  label="Password"
+                  margin="normal"
+                  name="confirmPassword"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="password"
+                  value={values.confirmPassword}
+                  variant="outlined"
+                />
+
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
-                    disabled={isSubmitting}
+                    //disabled={isvalid}
                     fullWidth
                     size="large"
                     type="submit"
                     variant="contained"
                   >
-                    Sign up now
+                    Create Account
                   </Button>
                 </Box>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  Have an account?
-                  {' '}
-                  <Link
-                    component={RouterLink}
-                    to="/login"
-                    variant="h6"
-                  >
-                    Sign in
-                  </Link>
-                </Typography>
               </form>
             )}
           </Formik>

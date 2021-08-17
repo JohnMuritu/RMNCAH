@@ -9,177 +9,136 @@ import {
   Grid,
   TextField
 } from '@material-ui/core';
-
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
-];
+import { useSelector } from 'react-redux';
+import * as Yup from 'yup';
+import { Formik } from 'formik';
+import axios from 'axios';
+import { NotificationManager } from 'react-notifications';
 
 const AccountProfileDetails = (props) => {
-  const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });
+  const firstName = useSelector((state) => state.main_reducer.user.FirstName);
+  const lastName = useSelector((state) => state.main_reducer.user.LastName);
+  const email = useSelector((state) => state.main_reducer.user.email);
+  const jobTitle = useSelector((state) => state.main_reducer.user.JobTitle);
+  const userName = useSelector((state) => state.main_reducer.user.unique_name);
 
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+  const handleSave = (values) => {
+    axios
+      .post('/api/user/UpdateProfile', values)
+      .then((response) => {
+        NotificationManager.success('Profile updated Successful!', '', 2000);
+        // navigate('/app/registerclient');
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+        NotificationManager.error('Error occured!!!', '', 2000);
+      });
   };
 
   return (
-    <form
-      autoComplete="off"
-      noValidate
-      {...props}
+    <Formik
+      initialValues={{
+        userName: userName,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        jobTitle: jobTitle
+      }}
+      validationSchema={Yup.object().shape({
+        firstName: Yup.string().required('First Name is required'),
+        lastName: Yup.string().required('Last Name is required')
+      })}
+      onSubmit={(values) => {
+        handleSave(values);
+        // navigate('/app/dashboard', { replace: true });
+      }}
     >
-      <Card>
-        <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
-        />
-        <Divider />
-        <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        touched,
+        values
+      }) => (
+        <form onSubmit={handleSubmit}>
+          <Card>
+            <CardHeader
+              // subheader="The information can be edited"
+              title="Profile"
+            />
+            <Divider />
+            <CardContent>
+              <Grid container spacing={3}>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    error={Boolean(touched.firstName && errors.firstName)}
+                    fullWidth
+                    helperText={touched.firstName && errors.firstName}
+                    label="First name"
+                    name="firstName"
+                    onChange={handleChange}
+                    value={values.firstName}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    error={Boolean(touched.lastName && errors.lastName)}
+                    fullWidth
+                    helperText={touched.lastName && errors.lastName}
+                    label="Last name"
+                    name="lastName"
+                    onChange={handleChange}
+                    value={values.lastName}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Email Address"
+                    name="email"
+                    onChange={handleChange}
+                    value={values.email}
+                    variant="outlined"
+                    inputProps={{
+                      readOnly: true
+                    }}
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Job Title"
+                    name="jobtitle"
+                    onChange={handleChange}
+                    value={values.jobTitle}
+                    variant="outlined"
+                    inputProps={{
+                      readOnly: true
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </CardContent>
+            <Divider />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                p: 2
+              }}
             >
-              <TextField
-                fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
-                onChange={handleChange}
-                required
-                value={values.firstName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Last name"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            p: 2
-          }}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Save details
-          </Button>
-        </Box>
-      </Card>
-    </form>
+              <Button color="primary" variant="contained" type="submit">
+                Save details
+              </Button>
+            </Box>
+          </Card>
+        </form>
+      )}
+    </Formik>
   );
 };
 
