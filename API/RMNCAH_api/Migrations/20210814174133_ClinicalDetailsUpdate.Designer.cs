@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RMNCAH_api.Data;
@@ -9,9 +10,10 @@ using RMNCAH_api.Data;
 namespace RMNCAH_api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210814174133_ClinicalDetailsUpdate")]
+    partial class ClinicalDetailsUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,10 +27,6 @@ namespace RMNCAH_api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("client_clinical_details_id")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("BabyName")
-                        .HasColumnName("baby_name")
-                        .HasColumnType("text");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnName("client_id")
@@ -151,14 +149,6 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("village")
                         .HasColumnType("text");
 
-                    b.Property<string>("chvName")
-                        .HasColumnName("chv_name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("deptClientId")
-                        .HasColumnName("dept_client_id")
-                        .HasColumnType("text");
-
                     b.Property<int?>("mfl_code")
                         .HasColumnName("mfl_code")
                         .HasColumnType("integer");
@@ -206,7 +196,7 @@ namespace RMNCAH_api.Migrations
                         new
                         {
                             Id = "2bb88694-a613-4cb1-b540-61b86713a098",
-                            ConcurrencyStamp = "3722be51-6685-47cb-95c1-508ee7be938d",
+                            ConcurrencyStamp = "b6f4114b-82d9-48d4-8cb9-56425b552ec8",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -278,10 +268,6 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("first_name")
                         .HasColumnType("text");
 
-                    b.Property<string>("JobTitle")
-                        .HasColumnName("job_title")
-                        .HasColumnType("text");
-
                     b.Property<string>("LastName")
                         .HasColumnName("last_name")
                         .HasColumnType("text");
@@ -348,7 +334,7 @@ namespace RMNCAH_api.Migrations
                             AccessFailedCount = 0,
                             Active = false,
                             ChangePassword = 0,
-                            ConcurrencyStamp = "93ca7a61-72b5-487e-aec4-9476a2dfea05",
+                            ConcurrencyStamp = "bd0d4175-d068-458c-91af-ad1ce7660f83",
                             Email = "admin@myemail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -356,7 +342,7 @@ namespace RMNCAH_api.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYEMAIL.COM",
                             NormalizedUserName = "ADMIN@MYEMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDcoat5HJD5rFjNkeAtivGyChdKloL+mZjYXYm1zdOm4cHb5MaNkgAuOuzCBlRbp3A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECvFdoKyorMFALJSlf7APVnLIvyuKxREOXDPDWQq2d1gknsBsLBKf4QRv3gYxsF5Gg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

@@ -16,5 +16,6 @@ namespace RMNCAH_api.Models.Security
         public string LastName { get; set; }
         public int ChangePassword { get; set; }
         public bool Active { get; set; }
+        public string JobTitle { get; set; }
     }
 }

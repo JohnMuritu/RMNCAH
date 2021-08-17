@@ -29,7 +29,7 @@ namespace RMNCAH_api.Controllers
         {
             using (_applicationDbContext)
             {
-                return _applicationDbContext.ClientDetails.OrderBy(c => c.FullNames).ToList();
+                return _applicationDbContext.ClientDetails.Include(h => h.HFLinked).OrderBy(c => c.FullNames).ToList();
             }
         }
 
@@ -37,10 +37,11 @@ namespace RMNCAH_api.Controllers
         public ClientDetails AddClientDetails(ClientDetails cd)
         {
             using (_applicationDbContext)
-            {
+            {              
                 cd.CreatedBy = _userManager.GetUserId(User);
                 cd.CreatedDate = DateTime.Now;
 
+                _applicationDbContext.HealthFacility.Attach(cd.HFLinked);
                 _applicationDbContext.ClientDetails.Add(cd);
                 _applicationDbContext.SaveChanges();
                 return _applicationDbContext.ClientDetails.Where(_r => _r.ClientId == cd.ClientId).FirstOrDefault();
@@ -55,6 +56,8 @@ namespace RMNCAH_api.Controllers
                 ClientDetails details = _applicationDbContext.ClientDetails
                     .Where(r => r.ClientId == cd.ClientId)
                     .FirstOrDefault();
+                details.chvName = cd.chvName;
+                details.deptClientId = cd.deptClientId;
                 details.FullNames = cd.FullNames;
                 details.DOB = cd.DOB;
                 details.Village = cd.Village;
@@ -70,6 +73,15 @@ namespace RMNCAH_api.Controllers
             }
         }
 
+        [HttpGet("ClientClinicalDetails/{clientId}")]
+        public List<ClientClinicalDetails> getClientClinicaltDetails(Guid clientId)
+        {
+            using (_applicationDbContext)
+            {
+                return _applicationDbContext.ClientClinicalDetails.Where(a => a.ClientId == clientId).ToList();
+            }
+        }
+
         [HttpPost("AddClientClinicalDetails")]
         public ClientClinicalDetails AddClientClinicalDetails(ClientClinicalDetails cd)
         {
@@ -79,6 +91,35 @@ namespace RMNCAH_api.Controllers
                 cd.CreatedDate = DateTime.Now;
 
                 _applicationDbContext.ClientClinicalDetails.Add(cd);
+                _applicationDbContext.SaveChanges();
+                return _applicationDbContext.ClientClinicalDetails.Where(_r => _r.ClientClinicalDetailsId == cd.ClientClinicalDetailsId).FirstOrDefault();
+            }
+        }
+
+        [HttpPost("UpdateClientClinicalDetails")]
+        public ClientClinicalDetails UpdateClientClinicalDetails(ClientClinicalDetails cd)
+        {
+            using (_applicationDbContext)
+            {
+                ClientClinicalDetails details = _applicationDbContext.ClientClinicalDetails
+                    .Where(r => r.ClientClinicalDetailsId == cd.ClientClinicalDetailsId)
+                    .FirstOrDefault();
+                details.BabyName = cd.BabyName;
+                details.anc1 = cd.anc1;
+                details.anc2 = cd.anc2;
+                details.anc3 = cd.anc3;
+                details.anc4 = cd.anc4;
+                details.anc5 = cd.anc5;
+                details.edd = cd.edd;
+                details.sba = cd.sba;
+                details.penta1 = cd.penta1;
+                details.penta2 = cd.penta2;
+                details.penta3 = cd.penta3;
+                details.mr1 = cd.mr1;
+                details.Remarks = cd.Remarks;
+                details.UpdatedBy = _userManager.GetUserId(User);
+                details.UpdatedDate = DateTime.Now;
+
                 _applicationDbContext.SaveChanges();
                 return _applicationDbContext.ClientClinicalDetails.Where(_r => _r.ClientClinicalDetailsId == cd.ClientClinicalDetailsId).FirstOrDefault();
             }

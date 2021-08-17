@@ -10,8 +10,8 @@ using RMNCAH_api.Data;
 namespace RMNCAH_api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20210722191434_allowNullDates")]
-    partial class allowNullDates
+    [Migration("20210811182509_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,6 +88,14 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("sba")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnName("updated_date")
+                        .HasColumnType("timestamp without time zone");
+
                     b.HasKey("ClientClinicalDetailsId")
                         .HasName("pk_client_clinical_details");
 
@@ -121,9 +129,9 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("full_names")
                         .HasColumnType("text");
 
-                    b.Property<string>("HFLinked")
-                        .HasColumnName("hf_linked")
-                        .HasColumnType("text");
+                    b.Property<int?>("HFLinkedMFLCode")
+                        .HasColumnName("hf_linked_mfl_code")
+                        .HasColumnType("integer");
 
                     b.Property<string>("OtherHFAttended")
                         .HasColumnName("other_hf_attended")
@@ -133,12 +141,23 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("phone_number")
                         .HasColumnType("text");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnName("updated_date")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("Village")
                         .HasColumnName("village")
                         .HasColumnType("text");
 
                     b.HasKey("ClientId")
                         .HasName("pk_client_details");
+
+                    b.HasIndex("HFLinkedMFLCode")
+                        .HasName("ix_client_details_hf_linked_mfl_code");
 
                     b.ToTable("client_details");
                 });
@@ -177,7 +196,7 @@ namespace RMNCAH_api.Migrations
                         new
                         {
                             Id = "2bb88694-a613-4cb1-b540-61b86713a098",
-                            ConcurrencyStamp = "66a758f6-b1fe-4b9c-8a17-0dc38b775195",
+                            ConcurrencyStamp = "98948637-0818-4a5f-bc9d-84585ec13b8f",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -315,7 +334,7 @@ namespace RMNCAH_api.Migrations
                             AccessFailedCount = 0,
                             Active = false,
                             ChangePassword = 0,
-                            ConcurrencyStamp = "14959d3d-bf99-4171-8362-8fff19d00157",
+                            ConcurrencyStamp = "c4b2ec84-fefd-4103-9226-e12d248ade3f",
                             Email = "admin@myemail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -323,7 +342,7 @@ namespace RMNCAH_api.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYEMAIL.COM",
                             NormalizedUserName = "ADMIN@MYEMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOCLS8KXTAO/mAZLoqgSd8LsIFq0hBxuyqah5jQdtcciW2mXrcl3M6WwikxhwhKQcw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEI/qPWbJQclS9O/TV1S0jwOF/eTjMjgzupQY1cm/I6rT8Yo8cIVXFkYYYqwePrpoGQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -437,6 +456,40 @@ namespace RMNCAH_api.Migrations
                         .HasName("pk_user_tokens");
 
                     b.ToTable("user_tokens");
+                });
+
+            modelBuilder.Entity("RMNCAH_api.Models.Utils.HealthFacilities", b =>
+                {
+                    b.Property<int>("MFLCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("mfl_code")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("FacilityName")
+                        .HasColumnName("facility_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FacilityOwner")
+                        .HasColumnName("facility_owner")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FacilityType")
+                        .HasColumnName("facility_type")
+                        .HasColumnType("text");
+
+                    b.HasKey("MFLCode")
+                        .HasName("pk_health_facility");
+
+                    b.ToTable("health_facilities");
+                });
+
+            modelBuilder.Entity("RMNCAH_api.Models.Client.ClientDetails", b =>
+                {
+                    b.HasOne("RMNCAH_api.Models.Utils.HealthFacilities", "HFLinked")
+                        .WithMany()
+                        .HasForeignKey("HFLinkedMFLCode")
+                        .HasConstraintName("fk_client_details_health_facility_hf_linked_mfl_code");
                 });
 
             modelBuilder.Entity("RMNCAH_api.Models.Security.RoleClaim", b =>

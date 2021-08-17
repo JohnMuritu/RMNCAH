@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RMNCAH_api.Models.Client;
+using RMNCAH_api.Models.Reports;
 using RMNCAH_api.Models.Security;
+using RMNCAH_api.Models.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,9 @@ namespace RMNCAH_api.Data
 
         public virtual DbSet<ClientDetails> ClientDetails { get; set; }
         public virtual DbSet<ClientClinicalDetails> ClientClinicalDetails { get; set; }
+        public virtual DbSet<HealthFacilities> HealthFacility { get; set; }
+        public virtual DbSet<ClientDetailsAndClinicalData> ClientDetailsAndClinicalReportData { get; set; }
+        public virtual DbSet<ClinicalAggregatedSummary> ClinicalAggregatedSummary { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
@@ -34,6 +39,8 @@ namespace RMNCAH_api.Data
             builder.Entity<UserToken>().ToTable("user_tokens");
             builder.Entity<ClientDetails>().ToTable("client_details");
             builder.Entity<ClientClinicalDetails>().ToTable("client_clinical_details");
+            builder.Entity<HealthFacilities>().ToTable("health_facilities");
+            builder.Entity<ClinicalAggregatedSummary>().HasNoKey();
 
             string ADMIN_ID = Guid.Parse("46ba742f-f729-4bb3-81f3-ad4e07c9cd30").ToString(); // Guid.NewGuid().ToString();
             string ROLE_ID = Guid.Parse("2bb88694-a613-4cb1-b540-61b86713a098").ToString();  //ADMIN_ID;

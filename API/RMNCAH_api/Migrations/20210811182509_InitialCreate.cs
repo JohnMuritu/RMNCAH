@@ -14,20 +14,22 @@ namespace RMNCAH_api.Migrations
                 {
                     client_clinical_details_id = table.Column<Guid>(nullable: false),
                     client_id = table.Column<Guid>(nullable: false),
-                    anc1 = table.Column<DateTime>(nullable: false),
-                    anc2 = table.Column<DateTime>(nullable: false),
-                    anc3 = table.Column<DateTime>(nullable: false),
-                    anc4 = table.Column<DateTime>(nullable: false),
-                    anc5 = table.Column<DateTime>(nullable: false),
-                    edd = table.Column<DateTime>(nullable: false),
-                    sba = table.Column<DateTime>(nullable: false),
-                    penta1 = table.Column<DateTime>(nullable: false),
-                    penta2 = table.Column<DateTime>(nullable: false),
-                    penta3 = table.Column<DateTime>(nullable: false),
-                    mr1 = table.Column<DateTime>(nullable: false),
+                    anc1 = table.Column<DateTime>(nullable: true),
+                    anc2 = table.Column<DateTime>(nullable: true),
+                    anc3 = table.Column<DateTime>(nullable: true),
+                    anc4 = table.Column<DateTime>(nullable: true),
+                    anc5 = table.Column<DateTime>(nullable: true),
+                    edd = table.Column<DateTime>(nullable: true),
+                    sba = table.Column<DateTime>(nullable: true),
+                    penta1 = table.Column<DateTime>(nullable: true),
+                    penta2 = table.Column<DateTime>(nullable: true),
+                    penta3 = table.Column<DateTime>(nullable: true),
+                    mr1 = table.Column<DateTime>(nullable: true),
                     remarks = table.Column<string>(nullable: true),
-                    created_by = table.Column<Guid>(nullable: false),
-                    created_date = table.Column<DateTime>(nullable: false)
+                    created_by = table.Column<string>(nullable: true),
+                    created_date = table.Column<DateTime>(nullable: false),
+                    updated_by = table.Column<string>(nullable: true),
+                    updated_date = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,23 +37,18 @@ namespace RMNCAH_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "client_details",
+                name: "health_facilities",
                 columns: table => new
                 {
-                    client_id = table.Column<Guid>(nullable: false),
-                    full_names = table.Column<string>(nullable: true),
-                    dob = table.Column<DateTime>(nullable: false),
-                    village = table.Column<string>(nullable: true),
-                    phone_number = table.Column<string>(nullable: true),
-                    alternative_phone_number = table.Column<string>(nullable: true),
-                    hf_linked = table.Column<string>(nullable: true),
-                    other_hf_attended = table.Column<string>(nullable: true),
-                    created_by = table.Column<Guid>(nullable: false),
-                    created_date = table.Column<DateTime>(nullable: false)
+                    mfl_code = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    facility_name = table.Column<string>(nullable: true),
+                    facility_type = table.Column<string>(nullable: true),
+                    facility_owner = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_client_details", x => x.client_id);
+                    table.PrimaryKey("pk_health_facility", x => x.mfl_code);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,6 +92,34 @@ namespace RMNCAH_api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_users", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "client_details",
+                columns: table => new
+                {
+                    client_id = table.Column<Guid>(nullable: false),
+                    full_names = table.Column<string>(nullable: true),
+                    dob = table.Column<DateTime>(nullable: false),
+                    village = table.Column<string>(nullable: true),
+                    phone_number = table.Column<string>(nullable: true),
+                    alternative_phone_number = table.Column<string>(nullable: true),
+                    hf_linked_mfl_code = table.Column<int>(nullable: true),
+                    other_hf_attended = table.Column<string>(nullable: true),
+                    created_by = table.Column<string>(nullable: true),
+                    created_date = table.Column<DateTime>(nullable: false),
+                    updated_by = table.Column<string>(nullable: true),
+                    updated_date = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_client_details", x => x.client_id);
+                    table.ForeignKey(
+                        name: "fk_client_details_health_facility_hf_linked_mfl_code",
+                        column: x => x.hf_linked_mfl_code,
+                        principalTable: "health_facilities",
+                        principalColumn: "mfl_code",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,17 +231,22 @@ namespace RMNCAH_api.Migrations
             migrationBuilder.InsertData(
                 table: "roles",
                 columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
-                values: new object[] { "2bb88694-a613-4cb1-b540-61b86713a098", "4e9d8870-8185-4865-9bc4-183620f76707", "ADMIN", "ADMIN" });
+                values: new object[] { "2bb88694-a613-4cb1-b540-61b86713a098", "98948637-0818-4a5f-bc9d-84585ec13b8f", "ADMIN", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "users",
                 columns: new[] { "id", "access_failed_count", "active", "change_password", "concurrency_stamp", "email", "email_confirmed", "first_name", "last_name", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
-                values: new object[] { "46ba742f-f729-4bb3-81f3-ad4e07c9cd30", 0, false, 0, "f2e33e14-1118-4021-851a-7ad4b0445038", "admin@myemail.com", true, "Admin", "Admin", false, null, "ADMIN@MYEMAIL.COM", "ADMIN@MYEMAIL.COM", "AQAAAAEAACcQAAAAELAapRXk2NpaEKn9KmIP0HXtvoAEEXQUYKlOg46Te0KGn1TyMLhcXPxImA1sgO8fzA==", null, false, "", false, "admin@myemail.com" });
+                values: new object[] { "46ba742f-f729-4bb3-81f3-ad4e07c9cd30", 0, false, 0, "c4b2ec84-fefd-4103-9226-e12d248ade3f", "admin@myemail.com", true, "Admin", "Admin", false, null, "ADMIN@MYEMAIL.COM", "ADMIN@MYEMAIL.COM", "AQAAAAEAACcQAAAAEI/qPWbJQclS9O/TV1S0jwOF/eTjMjgzupQY1cm/I6rT8Yo8cIVXFkYYYqwePrpoGQ==", null, false, "", false, "admin@myemail.com" });
 
             migrationBuilder.InsertData(
                 table: "user_roles",
                 columns: new[] { "user_id", "role_id" },
                 values: new object[] { "46ba742f-f729-4bb3-81f3-ad4e07c9cd30", "2bb88694-a613-4cb1-b540-61b86713a098" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_client_details_hf_linked_mfl_code",
+                table: "client_details",
+                column: "hf_linked_mfl_code");
 
             migrationBuilder.CreateIndex(
                 name: "ix_role_claims_role_id",
@@ -278,6 +308,9 @@ namespace RMNCAH_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "user_tokens");
+
+            migrationBuilder.DropTable(
+                name: "health_facilities");
 
             migrationBuilder.DropTable(
                 name: "roles");

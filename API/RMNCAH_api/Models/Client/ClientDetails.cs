@@ -1,4 +1,5 @@
 ﻿using RMNCAH_api.Models.Security;
+using RMNCAH_api.Models.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,8 @@ namespace RMNCAH_api.Models.Client
 
         [Key]
         public Guid ClientId { get; set; }
+        public string chvName { get; set; }
+        public string deptClientId { get; set; }
         public string FullNames { get; set; }
 
         /*[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]
@@ -29,7 +32,8 @@ namespace RMNCAH_api.Models.Client
         public string Village { get; set; }
         public string PhoneNumber { get; set; }
         public string AlternativePhoneNumber { get; set; }
-        public string HFLinked { get; set; }
+        [ForeignKey("mfl_code")]
+        public HealthFacilities HFLinked { get; set; }
         public string OtherHFAttended { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

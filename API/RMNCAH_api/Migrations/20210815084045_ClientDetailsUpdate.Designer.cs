@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RMNCAH_api.Data;
@@ -9,9 +10,10 @@ using RMNCAH_api.Data;
 namespace RMNCAH_api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210815084045_ClientDetailsUpdate")]
+    partial class ClientDetailsUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,10 +27,6 @@ namespace RMNCAH_api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("client_clinical_details_id")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("BabyName")
-                        .HasColumnName("baby_name")
-                        .HasColumnType("text");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnName("client_id")
@@ -206,7 +204,7 @@ namespace RMNCAH_api.Migrations
                         new
                         {
                             Id = "2bb88694-a613-4cb1-b540-61b86713a098",
-                            ConcurrencyStamp = "3722be51-6685-47cb-95c1-508ee7be938d",
+                            ConcurrencyStamp = "2061c43d-620e-4fcf-aae0-474850a18712",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         });
@@ -348,7 +346,7 @@ namespace RMNCAH_api.Migrations
                             AccessFailedCount = 0,
                             Active = false,
                             ChangePassword = 0,
-                            ConcurrencyStamp = "93ca7a61-72b5-487e-aec4-9476a2dfea05",
+                            ConcurrencyStamp = "156df0f4-394f-4a53-8d31-10809b2763a7",
                             Email = "admin@myemail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -356,7 +354,7 @@ namespace RMNCAH_api.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYEMAIL.COM",
                             NormalizedUserName = "ADMIN@MYEMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDcoat5HJD5rFjNkeAtivGyChdKloL+mZjYXYm1zdOm4cHb5MaNkgAuOuzCBlRbp3A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOh45sWZy420AS0nIXnjBiSxUMdzd9YxLi8Cnf4XtJLPU3AOHgp6ONXy72nctKUBUw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

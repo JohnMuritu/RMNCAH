@@ -1,23 +1,24 @@
-﻿using RMNCAH_api.Models.Security;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RMNCAH_api.Models.Client
+namespace RMNCAH_api.Models.Reports
 {
-    public class ClientClinicalDetails
+    public class ClientDetailsAndClinicalData
     {
-        public ClientClinicalDetails()
-        {
-            ClientClinicalDetailsId = Guid.NewGuid();
-        }
-
         [Key]
         public Guid ClientClinicalDetailsId { get; set; }
-        public Guid ClientId { get; set; }
+        public string chvName { get; set; }
+        public string deptClientId { get; set; }
+        public string FullNames { get; set; }
+        public double Age { get; set; }
+        public string Village { get; set; }
+        public string PhoneNumber { get; set; }
+        public string AlternativePhoneNumber { get; set; }
+        public string HFLinked { get; set; }
+        public string OtherHFAttended { get; set; }
         public string BabyName { get; set; }
         public DateTime? anc1 { get; set; }
         public DateTime? anc2 { get; set; }
@@ -31,10 +32,5 @@ namespace RMNCAH_api.Models.Client
         public DateTime? penta3 { get; set; }
         public DateTime? mr1 { get; set; }
         public string Remarks { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-
     }
 }
