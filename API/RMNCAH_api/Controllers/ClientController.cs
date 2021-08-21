@@ -63,8 +63,11 @@ namespace RMNCAH_api.Controllers
                 details.Village = cd.Village;
                 details.PhoneNumber = cd.PhoneNumber;
                 details.AlternativePhoneNumber = cd.AlternativePhoneNumber;
-                details.HFLinked = cd.HFLinked;
+                //details.HFLinked = cd.HFLinked;
+                details.mfl_code = cd.mfl_code;
                 details.OtherHFAttended = cd.OtherHFAttended;
+                details.HIVStatusKnown = cd.HIVStatusKnown;
+                details.testDone = cd.testDone;
                 details.UpdatedBy = _userManager.GetUserId(User);
                 details.UpdatedDate = DateTime.Now;
 
@@ -78,7 +81,11 @@ namespace RMNCAH_api.Controllers
         {
             using (_applicationDbContext)
             {
-                return _applicationDbContext.ClientClinicalDetails.Where(a => a.ClientId == clientId).ToList();
+                return _applicationDbContext.ClientClinicalDetails
+                    .Include(h => h.AdultRemarksOptions)
+                    .Include(h => h.deliveryOptions)
+                    .Include(h => h.ChildRemarksOptions)
+                    .Where(a => a.ClientId == clientId).ToList();
             }
         }
 
@@ -89,6 +96,13 @@ namespace RMNCAH_api.Controllers
             {
                 cd.CreatedBy = _userManager.GetUserId(User);
                 cd.CreatedDate = DateTime.Now;
+
+                if (cd.remarksChild == 0)
+                    cd.remarksChild = null;
+                if (cd.remarksParent == 0)
+                    cd.remarksParent = null;
+                if (cd.delivery == 0)
+                    cd.delivery = null;
 
                 _applicationDbContext.ClientClinicalDetails.Add(cd);
                 _applicationDbContext.SaveChanges();
@@ -111,12 +125,13 @@ namespace RMNCAH_api.Controllers
                 details.anc4 = cd.anc4;
                 details.anc5 = cd.anc5;
                 details.edd = cd.edd;
-                details.sba = cd.sba;
+                details.remarksParent = cd.remarksParent == 0 ? null : cd.remarksParent;
+                details.delivery = cd.delivery == 0 ? null : cd.delivery; ;
                 details.penta1 = cd.penta1;
                 details.penta2 = cd.penta2;
                 details.penta3 = cd.penta3;
                 details.mr1 = cd.mr1;
-                details.Remarks = cd.Remarks;
+                details.remarksChild = cd.remarksChild == 0 ? null : cd.remarksChild; ;
                 details.UpdatedBy = _userManager.GetUserId(User);
                 details.UpdatedDate = DateTime.Now;
 

@@ -23,47 +23,58 @@ import { NotificationManager } from 'react-notifications';
 import { v4 as uuidv4 } from 'uuid';
 import * as ACTION_TYPES from '../../actions/actions';
 
-const deliveryOptions = [
-  {
-    value: 0,
-    label: 'Select'
-  },
-  {
-    value: 1,
-    label: 'SBA'
-  },
-  {
-    value: 2,
-    label: 'HD (home delivery)'
-  },
-  {
-    value: 3,
-    label: 'BBA(Born before arrival)'
-  }
-];
+// const deliveryOptions = [
+//   {
+//     value: '0',
+//     label: 'Select'
+//   },
+//   {
+//     value: '1',
+//     label: 'SBA'
+//   },
+//   {
+//     value: '2',
+//     label: 'HD (home delivery)'
+//   },
+//   {
+//     value: '3',
+//     label: 'BBA(Born before arrival)'
+//   }
+// ];
 
-const remarksOptions = [
-  {
-    value: 0,
-    label: 'Select'
-  },
-  {
-    value: 1,
-    label: 'Abortion'
-  },
-  {
-    value: 2,
-    label: 'Miscarried'
-  },
-  {
-    value: 3,
-    label: 'Still birth'
-  },
-  {
-    value: 4,
-    label: 'Child death'
-  }
-];
+// const adultRemarksOptions = [
+//   {
+//     value: '0',
+//     label: 'Select'
+//   },
+//   {
+//     value: '1',
+//     label: 'Abortion'
+//   },
+//   {
+//     value: '2',
+//     label: 'Miscarried'
+//   },
+//   {
+//     value: '3',
+//     label: 'Still birth'
+//   },
+//   {
+//     value: '4',
+//     label: 'Maternal death'
+//   }
+// ];
+
+// const childRemarksOptions = [
+//   {
+//     value: '0',
+//     label: 'Select'
+//   },
+//   {
+//     value: '1',
+//     label: 'Child death'
+//   }
+// ];
 
 const ClientClinicalDetails = (props) => {
   const dispatch = useDispatch();
@@ -83,6 +94,12 @@ const ClientClinicalDetails = (props) => {
     (state) => state.main_reducer.clientClinicalDetails
   );
 
+  const [deliveryOptions, setDeliveryOptions] = useState(null);
+  const [adultRemarksOptions, setAdultRemarksOptions] = useState(null);
+  const [childRemarksOptions, setChildRemarksOptions] = useState(null);
+
+  const [parentRemarkSelected, setParentRemarkSelected] = useState(null);
+
   const calculate_age = () => {
     var today = new Date();
     var birthDate = new Date(dob); // create a date object directly from `dob1` argument
@@ -95,6 +112,7 @@ const ClientClinicalDetails = (props) => {
   };
 
   const handleSave = (clientClinicalDetails) => {
+    console.log(ClientClinicalDetails);
     if (clientClinicalDetails.clientClinicalDetailsId === '') {
       clientClinicalDetails.clientClinicalDetailsId = uuidv4();
       console.log(clientClinicalDetails);
@@ -110,6 +128,7 @@ const ClientClinicalDetails = (props) => {
         .catch((error) => {
           console.log(`error : ${error}`);
           NotificationManager.error('Error Save!', '', 10000);
+          clientClinicalDetails.clientClinicalDetailsId = '';
         });
     } else {
       console.log(clientClinicalDetails);
@@ -140,15 +159,92 @@ const ClientClinicalDetails = (props) => {
     //   });
   };
 
+  const getDeliveryOptions = () => {
+    axios
+      .get('/api/utils/deliveryoptions')
+      .then((response) => {
+        setDeliveryOptions(response.data);
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+      });
+  };
+
+  const getAdultRemarks = () => {
+    axios
+      .get('/api/utils/adultremarks')
+      .then((response) => {
+        setAdultRemarksOptions(response.data);
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+      });
+  };
+
+  const getChildRemarks = () => {
+    axios
+      .get('/api/utils/childremarks')
+      .then((response) => {
+        setChildRemarksOptions(response.data);
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+      });
+  };
+
   useEffect(() => {
     if (clientId === clientClinicalDetailsFetched.clientId) {
       formik.setValues(clientClinicalDetailsFetched);
+
+      if (clientClinicalDetailsFetched.adultRemarksOptions !== null) {
+        setParentRemarkSelected(
+          clientClinicalDetailsFetched.adultRemarksOptions.option
+        );
+      } else {
+        setParentRemarkSelected(null);
+      }
+    }
+
+    if (!deliveryOptions) {
+      getDeliveryOptions();
+    }
+
+    if (!adultRemarksOptions) {
+      getAdultRemarks();
+    }
+
+    if (!childRemarksOptions) {
+      getChildRemarks();
     }
   }, [clientClinicalDetailsFetched]);
 
   const SignupSchema = Yup.object().shape({
-    //fullNames: Yup.string().required(),
-    //dob: Yup.date().required('Required')
+    // anc1: Yup.date(),
+    // anc2: Yup.date().when(
+    //   'anc1',
+    //   (anc1, schema) =>
+    //     anc1 && schema.min(anc1, 'ANC2 should be greater than ANC1')
+    // )
+    // anc3: Yup.date().when(
+    //   'anc2',
+    //   (anc2, schema) =>
+    //     anc2 && schema.min(anc2, 'ANC3 should be greater than ANC2')
+    // )
+    // anc4: Yup.date().when(
+    //   'anc3',
+    //   (anc3, schema) =>
+    //     anc3 && schema.min(anc3, 'ANC4 should be greater than ANC3')
+    // ),
+    // anc5: Yup.date().when(
+    //   'anc4',
+    //   (anc4, schema) =>
+    //     anc4 && schema.min(anc4, 'ANC5 should be greater than ANC4')
+    // ),
+    // edd: Yup.date().when(
+    //   'anc5',
+    //   (anc5, schema) =>
+    //     anc5 && schema.min(anc5, 'EDD should be greater than ANC5')
+    // )
   });
 
   const formik = useFormik({
@@ -162,12 +258,13 @@ const ClientClinicalDetails = (props) => {
       anc4: null,
       anc5: null,
       edd: null,
-      delivery: '',
+      remarksParent: 0,
+      delivery: 0,
       penta1: null,
       penta2: null,
       penta3: null,
       mr1: null,
-      remarks: ''
+      remarksChild: 0
     },
     onSubmit: (values) => {
       handleSave(values);
@@ -252,6 +349,9 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('anc1', val);
                   }}
+                  helperText={formik.touched.anc1 && formik.errors.anc1}
+                  error={Boolean(formik.touched.anc1 && formik.errors.anc1)}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -268,6 +368,9 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('anc2', val);
                   }}
+                  helperText={formik.touched.anc2 && formik.errors.anc2}
+                  error={Boolean(formik.touched.anc2 && formik.errors.anc2)}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -335,22 +438,40 @@ const ClientClinicalDetails = (props) => {
                 />
               </Grid>
               <Grid item md={3} xs={12}>
-                {/* <KeyboardDatePicker
-                  fullWidth
-                  autoOk
-                  disableFuture={true}
-                  variant="inline"
-                  inputVariant="outlined"
-                  label="SBA"
-                  format="dd-MMM-yyyy"
-                  value={formik.values.sba}
-                  InputAdornmentProps={{ position: 'end' }}
-                  onChange={(val) => {
-                    formik.setFieldValue('sba', val);
-                  }}
-                /> */}
-
                 <TextField
+                  fullWidth
+                  name="remarksParent"
+                  select
+                  label="Remarks (Parent)"
+                  value={formik.values.remarksParent}
+                  onChange={(e, val) => {
+                    formik.handleChange(e);
+                    setParentRemarkSelected(val.props.children);
+                    formik.setFieldValue('delivery', null);
+                    formik.setFieldValue('penta1', null);
+                    formik.setFieldValue('penta2', null);
+                    formik.setFieldValue('penta3', null);
+                    formik.setFieldValue('mr1', null);
+                    formik.setFieldValue('remarksChild', null);
+                  }}
+                >
+                  <MenuItem value={0}>Select</MenuItem>
+                  {adultRemarksOptions &&
+                    adultRemarksOptions.map((option) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.option}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <TextField
+                  disabled={
+                    parentRemarkSelected === 'Abortion' ||
+                    parentRemarkSelected === 'Still birth' ||
+                    parentRemarkSelected === 'Maternal death' ||
+                    parentRemarkSelected === 'Miscarriage'
+                  }
                   fullWidth
                   name="delivery"
                   select
@@ -358,15 +479,23 @@ const ClientClinicalDetails = (props) => {
                   value={formik.values.delivery}
                   onChange={formik.handleChange}
                 >
-                  {deliveryOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                  <MenuItem value={0}>Select</MenuItem>
+                  {deliveryOptions &&
+                    deliveryOptions.map((option) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.option}
+                      </MenuItem>
+                    ))}
                 </TextField>
               </Grid>
               <Grid item md={3} xs={12}>
                 <KeyboardDatePicker
+                  disabled={
+                    parentRemarkSelected === 'Abortion' ||
+                    parentRemarkSelected === 'Still birth' ||
+                    parentRemarkSelected === 'Maternal death' ||
+                    parentRemarkSelected === 'Miscarriage'
+                  }
                   fullWidth
                   autoOk
                   disableFuture={true}
@@ -383,6 +512,12 @@ const ClientClinicalDetails = (props) => {
               </Grid>
               <Grid item md={3} xs={12}>
                 <KeyboardDatePicker
+                  disabled={
+                    parentRemarkSelected === 'Abortion' ||
+                    parentRemarkSelected === 'Still birth' ||
+                    parentRemarkSelected === 'Maternal death' ||
+                    parentRemarkSelected === 'Miscarriage'
+                  }
                   fullWidth
                   autoOk
                   disableFuture={true}
@@ -399,6 +534,12 @@ const ClientClinicalDetails = (props) => {
               </Grid>
               <Grid item md={3} xs={12}>
                 <KeyboardDatePicker
+                  disabled={
+                    parentRemarkSelected === 'Abortion' ||
+                    parentRemarkSelected === 'Still birth' ||
+                    parentRemarkSelected === 'Maternal death' ||
+                    parentRemarkSelected === 'Miscarriage'
+                  }
                   fullWidth
                   autoOk
                   disableFuture={true}
@@ -415,6 +556,12 @@ const ClientClinicalDetails = (props) => {
               </Grid>
               <Grid item md={3} xs={12}>
                 <KeyboardDatePicker
+                  disabled={
+                    parentRemarkSelected === 'Abortion' ||
+                    parentRemarkSelected === 'Still birth' ||
+                    parentRemarkSelected === 'Maternal death' ||
+                    parentRemarkSelected === 'Miscarriage'
+                  }
                   fullWidth
                   autoOk
                   disableFuture={true}
@@ -430,28 +577,27 @@ const ClientClinicalDetails = (props) => {
                 />
               </Grid>
               <Grid item md={3} xs={12}>
-                {/* <TextField
-                  fullWidth
-                  label="Remark"
-                  name="remarks"
-                  onChange={formik.handleChange}
-                  value={formik.values.remarks}
-                  variant="outlined"
-                /> */}
-
                 <TextField
+                  disabled={
+                    parentRemarkSelected === 'Abortion' ||
+                    parentRemarkSelected === 'Still birth' ||
+                    parentRemarkSelected === 'Maternal death' ||
+                    parentRemarkSelected === 'Miscarriage'
+                  }
                   fullWidth
-                  name="remarks"
+                  name="remarksChild"
                   select
-                  label="Remarks"
-                  value={formik.values.remarks}
+                  label="Remarks (Child)"
+                  value={formik.values.remarksChild}
                   onChange={formik.handleChange}
                 >
-                  {remarksOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
+                  <MenuItem value={0}>Select</MenuItem>
+                  {childRemarksOptions &&
+                    childRemarksOptions.map((option) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.option}
+                      </MenuItem>
+                    ))}
                 </TextField>
               </Grid>
             </MuiPickersUtilsProvider>

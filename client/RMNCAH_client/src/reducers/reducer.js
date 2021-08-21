@@ -11,12 +11,19 @@ const initialState = {
     chvName: '',
     deptClientId: '',
     fullNames: '',
-    dob: '',
+    dob: null,
     village: '',
     phoneNumber: '',
     alternativePhoneNumber: '',
-    hfLinked: '',
-    otherHFAttended: ''
+    // hfLinked: {
+    //   mflCode: '',
+    //   facilityName: ''
+    // },
+    mfl_code: null,
+    healthFacility: null,
+    otherHFAttended: '',
+    hivStatusKnown: '',
+    testDone: ''
   },
   clientClinicalDetails: {
     clientClinicalDetailsId: '',
@@ -28,12 +35,13 @@ const initialState = {
     anc4: null,
     anc5: null,
     edd: null,
-    sba: null,
+    remarksParent: null,
+    delivery: null,
     penta1: null,
     penta2: null,
     penta3: null,
     mr1: null,
-    remarks: ''
+    remarksChild: null
   },
   update_client_list: 0,
   client_list: [],

@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import moment from 'moment';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -32,12 +33,12 @@ const ClientList = (props) => {
 
   const onGridReady = (params) => {
     setGridApi(params.api);
-    params.api.sizeColumnsToFit();
+    //params.api.sizeColumnsToFit();
   };
 
   const onSelectionChanged = () => {
     var selectedRow = gridApi.getSelectedRows();
-    console.log(selectedRow);
+    // console.log(selectedRow);
     dispatch({
       type: ACTION_TYPES.SET_CLIENT_DETAILS,
       payload: selectedRow[0]
@@ -68,6 +69,12 @@ const ClientList = (props) => {
   // function percentageFormatter(params) {
   //   return params.value + '%';
   // }
+
+  function dateFormatter(params) {
+    if (params.value !== null) {
+      return moment(params.value).format('DD-MMM-YYYY');
+    }
+  }
 
   return (
     <div className="ag-theme-alpine" style={{ height: 350, width: '100%' }}>
@@ -103,6 +110,7 @@ const ClientList = (props) => {
           headerName="DOB"
           sortable={true}
           filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
           field="village"
@@ -130,6 +138,18 @@ const ClientList = (props) => {
         <AgGridColumn
           field="otherHFAttended"
           headerName="Other Health Facility"
+          sortable={true}
+          filter={true}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="hivStatusKnown"
+          headerName="HIV Status"
+          sortable={true}
+          filter={true}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="testDone"
+          headerName="Test done"
           sortable={true}
           filter={true}
         ></AgGridColumn>

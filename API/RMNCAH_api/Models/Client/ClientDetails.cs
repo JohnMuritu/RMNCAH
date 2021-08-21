@@ -32,9 +32,12 @@ namespace RMNCAH_api.Models.Client
         public string Village { get; set; }
         public string PhoneNumber { get; set; }
         public string AlternativePhoneNumber { get; set; }
+        public int mfl_code { get; set; }
         [ForeignKey("mfl_code")]
         public HealthFacilities HFLinked { get; set; }
         public string OtherHFAttended { get; set; }
+        public string HIVStatusKnown { get; set; }
+        public string testDone { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public string UpdatedBy { get; set; }

@@ -1,4 +1,5 @@
 ﻿using RMNCAH_api.Models.Security;
+using RMNCAH_api.Models.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,12 +26,19 @@ namespace RMNCAH_api.Models.Client
         public DateTime? anc4 { get; set; }
         public DateTime? anc5 { get; set; }
         public DateTime? edd { get; set; }
-        public DateTime? sba { get; set; }
+        public int? remarksParent { get; set; }
+        [ForeignKey("remarksParent")]
+        public AdultRemarksOptions AdultRemarksOptions { get; set; }
+        public int? delivery { get; set; }
+        [ForeignKey("delivery")]
+        public DeliveryOptions deliveryOptions { get; set; }
         public DateTime? penta1 { get; set; }
         public DateTime? penta2 { get; set; }
         public DateTime? penta3 { get; set; }
         public DateTime? mr1 { get; set; }
-        public string Remarks { get; set; }
+        public int? remarksChild { get; set; }
+        [ForeignKey("remarksChild")]
+        public ChildRemarksOptions ChildRemarksOptions { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public string UpdatedBy { get; set; }

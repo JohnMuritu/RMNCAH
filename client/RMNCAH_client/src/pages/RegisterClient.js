@@ -1,9 +1,5 @@
 import { Helmet } from 'react-helmet';
-import {
-  Box,
-  Container,
-  Grid
-} from '@material-ui/core';
+import { Box, Container, Grid } from '@material-ui/core';
 import ClientDetails from 'src/components/client/ClientDetails';
 import ClientList from 'src/components/client/ClientList';
 //import customers from 'src/__mocks__/customers';
@@ -11,7 +7,7 @@ import ClientList from 'src/components/client/ClientList';
 const RegisterClient = () => (
   <>
     <Helmet>
-      <title>Register Client | RMNCAH</title>
+      <title>Client List | RMNCAH</title>
     </Helmet>
     <Box
       sx={{
@@ -21,25 +17,11 @@ const RegisterClient = () => (
       }}
     >
       <Container maxWidth={false}>
-        <Grid
-          container
-          spacing={3}
-        >
-          
-          <Grid
-            item
-            lg={12}
-            md={12}
-            xs={12}
-          >
+        <Grid container spacing={3}>
+          <Grid item lg={12} md={12} xs={12}>
             <ClientDetails />
           </Grid>
-          <Grid
-            item
-            lg={12}
-            md={12}
-            xs={12}
-          >
+          <Grid item lg={12} md={12} xs={12}>
             <ClientList />
           </Grid>
         </Grid>

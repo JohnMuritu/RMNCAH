@@ -7,7 +7,9 @@ import {
   CardHeader,
   Divider,
   Grid,
-  TextField
+  TextField,
+  Autocomplete,
+  MenuItem
 } from '@material-ui/core';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -21,11 +23,12 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+// import Autocomplete from '@material-ui/lab/Autocomplete';
 import { alpha } from '@material-ui/core/styles';
 import moment from 'moment';
 import * as ACTION_TYPES from '../../actions/actions';
 import { date } from 'date-fns/locale/af';
+import { Schema } from '@material-ui/icons';
 
 const ClientDetails = (props) => {
   const dispatch = useDispatch();
@@ -42,9 +45,10 @@ const ClientDetails = (props) => {
   const [healthFacilitiesFetched, setHealthFacilitiesFetched] = useState(false);
 
   const handleSave = (clientDetails) => {
+    console.log(clientDetails);
     if (clientDetails.clientId === '') {
       clientDetails.clientId = uuidv4();
-      console.log(clientDetails);
+      // console.log(clientDetails);
       axios
         .post('/api/client/addclientdetails', clientDetails)
         .then((response) => {
@@ -58,9 +62,10 @@ const ClientDetails = (props) => {
         .catch((error) => {
           console.log(`error : ${error}`);
           NotificationManager.error('Error Save!', '', 10000);
+          clientDetails.clientId = '';
         });
     } else {
-      console.log(clientDetails);
+      // console.log(clientDetails);
       axios
         .post('/api/client/updateclientdetails', clientDetails)
         .then((response) => {
@@ -103,8 +108,25 @@ const ClientDetails = (props) => {
   }, [clientDetailsFetched, updateComponent]);
 
   const SignupSchema = Yup.object().shape({
-    fullNames: Yup.string().required(),
-    dob: Yup.date().required('Required')
+    chvName: Yup.string().required('CHV Name is required'),
+    deptClientId: Yup.string().required('Client ID is required'),
+    fullNames: Yup.string().required('Client Name is required'),
+    dob: Yup.date().required('Required'),
+    village: Yup.string().required('Village is required'),
+    phoneNumber: Yup.string().required('Phone number is required'),
+    alternativePhoneNumber: Yup.string().required(
+      'Alternative Phone number is required'
+    ),
+    hfLinked: Yup.string().required('HF Linked is required').nullable(),
+    otherHFAttended: Yup.string().required('Other HF attended is required'),
+    hivStatusKnown: Yup.string().required('HIV Status Known is required')
+    // testDone: Yup.string()
+    //   //.required('Test done is required')
+    //   .when(['hivStatusKnown'], (hivStatusKnown) => {
+    //     return hivStatusKnown === 'No'
+    //       ? Schema.required('Test done is required')
+    //       : Schema.min(0);
+    //   })
   });
 
   const formik = useFormik({
@@ -117,11 +139,15 @@ const ClientDetails = (props) => {
       village: '',
       phoneNumber: '',
       alternativePhoneNumber: '',
-      hfLinked: {
-        mflCode: null,
-        facilityName: ''
-      },
-      otherHFAttended: ''
+      // hfLinked: {
+      //   mflCode: '',
+      //   facilityName: ''
+      // },
+      mfl_code: null,
+      hfLinked: null,
+      otherHFAttended: '',
+      hivStatusKnown: '',
+      testDone: ''
     },
     onSubmit: (values) => {
       handleSave(values);
@@ -137,7 +163,7 @@ const ClientDetails = (props) => {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
               <TextField
                 fullWidth
                 label="CHV Name"
@@ -148,27 +174,11 @@ const ClientDetails = (props) => {
                 variant="outlined"
                 helperText={formik.touched.chvName && formik.errors.chvName}
                 error={Boolean(formik.touched.chvName && formik.errors.chvName)}
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <TextField
-                fullWidth
-                label="Client ID (MFL/SR/Year)"
-                name="deptClientId"
-                onChange={formik.handleChange}
-                // onBlur={handleBlur}
-                value={formik.values.deptClientId}
-                variant="outlined"
-                helperText={
-                  formik.touched.deptClientId && formik.errors.deptClientId
-                }
-                error={Boolean(
-                  formik.touched.deptClientId && formik.errors.deptClientId
-                )}
+                size="small"
               />
             </Grid>
 
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
               <TextField
                 fullWidth
                 label="Full names"
@@ -181,9 +191,10 @@ const ClientDetails = (props) => {
                 error={Boolean(
                   formik.touched.fullNames && formik.errors.fullNames
                 )}
+                size="small"
               />
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   helperText={formik.touched.dob && formik.errors.dob}
@@ -203,10 +214,11 @@ const ClientDetails = (props) => {
                   KeyboardButtonProps={{
                     'aria-label': 'Date of birth'
                   }}
+                  size="small"
                 />
               </MuiPickersUtilsProvider>
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
               <TextField
                 fullWidth
                 label="Village"
@@ -214,9 +226,12 @@ const ClientDetails = (props) => {
                 onChange={formik.handleChange}
                 value={formik.values.village}
                 variant="outlined"
+                helperText={formik.touched.village && formik.errors.village}
+                error={Boolean(formik.touched.village && formik.errors.village)}
+                size="small"
               />
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
               <TextField
                 fullWidth
                 label="Phone Number"
@@ -224,9 +239,16 @@ const ClientDetails = (props) => {
                 onChange={formik.handleChange}
                 value={formik.values.phoneNumber}
                 variant="outlined"
+                helperText={
+                  formik.touched.phoneNumber && formik.errors.phoneNumber
+                }
+                error={Boolean(
+                  formik.touched.phoneNumber && formik.errors.phoneNumber
+                )}
+                size="small"
               />
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
               <TextField
                 fullWidth
                 label="Alternative Phone number"
@@ -234,9 +256,18 @@ const ClientDetails = (props) => {
                 onChange={formik.handleChange}
                 value={formik.values.alternativePhoneNumber}
                 variant="outlined"
+                helperText={
+                  formik.touched.alternativePhoneNumber &&
+                  formik.errors.alternativePhoneNumber
+                }
+                error={Boolean(
+                  formik.touched.alternativePhoneNumber &&
+                    formik.errors.alternativePhoneNumber
+                )}
+                size="small"
               />
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
               <Autocomplete
                 fullWidth
                 disableClearable
@@ -246,15 +277,52 @@ const ClientDetails = (props) => {
                 value={formik.values.hfLinked}
                 options={healthFacilities}
                 getOptionLabel={(option) => option.facilityName}
+                getOptionSelected={(option, value) =>
+                  option.mflCode === value.mflCode
+                }
                 onChange={(event, newValue) => {
+                  formik.setFieldValue('mfl_code', newValue.mflCode);
+                  formik.setFieldValue(
+                    'deptClientId',
+                    newValue.mflCode + '/XX/XXXX'
+                  );
                   formik.setFieldValue('hfLinked', newValue);
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="HF Linked" variant="outlined" />
+                  <TextField
+                    {...params}
+                    label="HF Linked"
+                    variant="outlined"
+                    helperText={
+                      formik.touched.hfLinked && formik.errors.hfLinked
+                    }
+                    error={Boolean(
+                      formik.touched.hfLinked && formik.errors.hfLinked
+                    )}
+                  />
                 )}
+                size="small"
               />
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item md={3} xs={12}>
+              <TextField
+                fullWidth
+                label="Client ID (MFL/SR/Year)"
+                name="deptClientId"
+                onChange={formik.handleChange}
+                // onBlur={handleBlur}
+                value={formik.values.deptClientId}
+                variant="outlined"
+                helperText={
+                  formik.touched.deptClientId && formik.errors.deptClientId
+                }
+                error={Boolean(
+                  formik.touched.deptClientId && formik.errors.deptClientId
+                )}
+                size="small"
+              />
+            </Grid>
+            <Grid item md={3} xs={12}>
               <TextField
                 fullWidth
                 label="Other HF attended"
@@ -262,8 +330,64 @@ const ClientDetails = (props) => {
                 onChange={formik.handleChange}
                 value={formik.values.otherHFAttended}
                 variant="outlined"
+                helperText={
+                  formik.touched.otherHFAttended &&
+                  formik.errors.otherHFAttended
+                }
+                error={Boolean(
+                  formik.touched.otherHFAttended &&
+                    formik.errors.otherHFAttended
+                )}
+                size="small"
               />
             </Grid>
+            <Grid item md={3} xs={12}>
+              <TextField
+                fullWidth
+                name="hivStatusKnown"
+                select
+                label="HIV Status Known"
+                value={formik.values.hivStatusKnown}
+                onChange={(e) => {
+                  formik.handleChange(e);
+                  if (e.target.value === 'Yes') {
+                    formik.setFieldValue('testDone', '');
+                  }
+                }}
+                helperText={
+                  formik.touched.hivStatusKnown && formik.errors.hivStatusKnown
+                }
+                error={Boolean(
+                  formik.touched.hivStatusKnown && formik.errors.hivStatusKnown
+                )}
+                size="small"
+              >
+                <MenuItem value="">Select</MenuItem>
+                <MenuItem value="Yes">Yes</MenuItem>
+                <MenuItem value="No">No</MenuItem>
+              </TextField>
+            </Grid>
+            {formik.values.hivStatusKnown === 'No' && (
+              <Grid item md={3} xs={12}>
+                <TextField
+                  fullWidth
+                  name="testDone"
+                  select
+                  label="HIV Test Done"
+                  value={formik.values.testDone}
+                  onChange={formik.handleChange}
+                  helperText={formik.touched.testDone && formik.errors.testDone}
+                  error={Boolean(
+                    formik.touched.testDone && formik.errors.testDone
+                  )}
+                  size="small"
+                >
+                  <MenuItem value="">Select</MenuItem>
+                  <MenuItem value="Yes">Yes</MenuItem>
+                  <MenuItem value="No">No</MenuItem>
+                </TextField>
+              </Grid>
+            )}
           </Grid>
         </CardContent>
         <Divider />

@@ -143,11 +143,26 @@ const ClientClinicalDetailsList = (props) => {
           valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
-          field="sba"
-          headerName="SBA"
+          field="remarksParent"
+          headerName="Remarks Parent"
+          hide={true}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="adultRemarksOptions.option"
+          headerName="Remarks Parent"
           sortable={true}
           filter={true}
-          valueFormatter={dateFormatter}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="delivery"
+          headerName="Delivery"
+          hide={true}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="deliveryOptions.option"
+          headerName="Delivery"
+          sortable={true}
+          filter={true}
         ></AgGridColumn>
         <AgGridColumn
           field="penta1"
@@ -177,13 +192,13 @@ const ClientClinicalDetailsList = (props) => {
           filter={true}
           valueFormatter={dateFormatter}
         ></AgGridColumn>
+        <AgGridColumn field="remarksChild" hide={true}></AgGridColumn>
         <AgGridColumn
-          field="remarks"
-          headerName="Remarks"
+          field="childRemarksOptions.option"
+          headerName="Remarks Child"
           sortable={true}
           filter={true}
         ></AgGridColumn>
-        {/* <AgGridColumn field="" width={135} cellRenderer="buttonRenderer" /> */}
       </AgGridReact>
     </div>
   );

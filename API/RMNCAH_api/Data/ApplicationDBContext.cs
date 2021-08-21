@@ -22,6 +22,9 @@ namespace RMNCAH_api.Data
         public virtual DbSet<HealthFacilities> HealthFacility { get; set; }
         public virtual DbSet<ClientDetailsAndClinicalData> ClientDetailsAndClinicalReportData { get; set; }
         public virtual DbSet<ClinicalAggregatedSummary> ClinicalAggregatedSummary { get; set; }
+        public virtual DbSet<DeliveryOptions> DeliveryOptions { get; set; }
+        public virtual DbSet<AdultRemarksOptions> AdultRemarksOptions { get; set; }
+        public virtual DbSet<ChildRemarksOptions> ChildRemarksOptions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
@@ -37,9 +40,13 @@ namespace RMNCAH_api.Data
             builder.Entity<UserLogin>().ToTable("user_logins");
             builder.Entity<RoleClaim>().ToTable("role_claims");
             builder.Entity<UserToken>().ToTable("user_tokens");
-            builder.Entity<ClientDetails>().ToTable("client_details");
-            builder.Entity<ClientClinicalDetails>().ToTable("client_clinical_details");
+            builder.Entity<DeliveryOptions>().ToTable("delivery_options");
+            builder.Entity<AdultRemarksOptions>().ToTable("adult_remarks_options");
+            builder.Entity<ChildRemarksOptions>().ToTable("child_remarks_options");
             builder.Entity<HealthFacilities>().ToTable("health_facilities");
+            builder.Entity<ClientDetails>().ToTable("client_details");
+            builder.Entity<ClientClinicalDetails>().ToTable("client_clinical_details");      
+            
             builder.Entity<ClinicalAggregatedSummary>().HasNoKey();
 
             string ADMIN_ID = Guid.Parse("46ba742f-f729-4bb3-81f3-ad4e07c9cd30").ToString(); // Guid.NewGuid().ToString();
@@ -65,13 +72,59 @@ namespace RMNCAH_api.Data
                 NormalizedEmail = "admin@myemail.com".ToUpper(),
                 EmailConfirmed = true,
                 PasswordHash = hasher.HashPassword(null, "Password123"),
-                SecurityStamp = string.Empty
+                SecurityStamp = string.Empty,
+                Active = true,
+                JobTitle = "System Administrator"
+                
             });
 
             builder.Entity<UserRole>().HasData(new UserRole
             {
                 RoleId = ROLE_ID,
                 UserId = ADMIN_ID
+            });
+
+            builder.Entity<DeliveryOptions>().HasData(new DeliveryOptions
+            {
+                id = 1,
+                option = "SBA"
+            });
+            builder.Entity<DeliveryOptions>().HasData(new DeliveryOptions
+            {
+                id = 2,
+                option = "HD (home delivery)"
+            });
+            builder.Entity<DeliveryOptions>().HasData(new DeliveryOptions
+            {
+                id = 3,
+                option = "BBA(Born before arrival)"
+            });
+
+            builder.Entity<AdultRemarksOptions>().HasData(new AdultRemarksOptions
+            {
+                id = 1,
+                option = "Abortion"
+            });
+            builder.Entity<AdultRemarksOptions>().HasData(new AdultRemarksOptions
+            {
+                id = 2,
+                option = "Miscarriage"
+            });
+            builder.Entity<AdultRemarksOptions>().HasData(new AdultRemarksOptions
+            {
+                id = 3,
+                option = "Still birth"
+            });
+            builder.Entity<AdultRemarksOptions>().HasData(new AdultRemarksOptions
+            {
+                id = 4,
+                option = "Maternal death"
+            });
+
+            builder.Entity<ChildRemarksOptions>().HasData(new ChildRemarksOptions
+            {
+                id = 1,
+                option = "Child death"
             });
         }
 

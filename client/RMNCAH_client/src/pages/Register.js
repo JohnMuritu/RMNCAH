@@ -34,7 +34,7 @@ const Register = () => {
   return (
     <>
       <Helmet>
-        <title>Register | Material Kit</title>
+        <title>Add User | Material Kit</title>
       </Helmet>
       <Box
         sx={{

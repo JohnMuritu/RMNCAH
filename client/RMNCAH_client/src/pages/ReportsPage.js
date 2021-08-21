@@ -7,7 +7,7 @@ import BasicDateRangePicker from 'src/Reports/BasicDateRangePicker';
 const ReportsPage = () => (
   <>
     <Helmet>
-      <title>Register Client | RMNCAH</title>
+      <title>Reports | RMNCAH</title>
     </Helmet>
     <Box
       sx={{
