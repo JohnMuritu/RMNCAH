@@ -277,9 +277,9 @@ const ClientDetails = (props) => {
                 value={formik.values.hfLinked}
                 options={healthFacilities}
                 getOptionLabel={(option) => option.facilityName}
-                getOptionSelected={(option, value) =>
-                  option.mflCode === value.mflCode
-                }
+                // getOptionSelected={(option, value) =>
+                //   option.mflCode === value.mflCode
+                // }
                 onChange={(event, newValue) => {
                   formik.setFieldValue('mfl_code', newValue.mflCode);
                   formik.setFieldValue(

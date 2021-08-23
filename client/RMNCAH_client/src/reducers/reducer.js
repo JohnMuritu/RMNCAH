@@ -43,6 +43,17 @@ const initialState = {
     mr1: null,
     remarksChild: null
   },
+  userDetails: {
+    userId: '',
+    userName: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    jobTitle: '',
+    userRole: 'USER',
+    password: '',
+    confirmPassword: ''
+  },
   update_client_list: 0,
   client_list: [],
   update_component: 0,
@@ -65,6 +76,9 @@ const reducer = (state = initialState, action) => {
 
     case ACTION_TYPES.SET_CLIENT_CLINICAL_DETAILS:
       return { ...state, clientClinicalDetails: action.payload };
+
+    case ACTION_TYPES.SET_USER_DETAILS:
+      return { ...state, userDetails: action.payload };
 
     case ACTION_TYPES.UPDATE_CLIENT_LIST:
       return { ...state, update_client_list: action.payload };

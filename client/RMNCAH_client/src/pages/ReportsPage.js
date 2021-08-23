@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet';
 import { Box, Container, Grid } from '@material-ui/core';
-import ClientLongitudinalReportList from 'src/Reports/ClientLongitudinalReportList';
-import ReportsSummary from 'src/Reports/ReportsSummary';
-import BasicDateRangePicker from 'src/Reports/BasicDateRangePicker';
+import ClientLongitudinalReportList from 'src/components/reports/ClientLongitudinalReportList';
+import ReportsSummary from 'src/components/reports/ReportsSummary';
+import BasicDateRangePicker from 'src/components/reports/BasicDateRangePicker';
 
 const ReportsPage = () => (
   <>

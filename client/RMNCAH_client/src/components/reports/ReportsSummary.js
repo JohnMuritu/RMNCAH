@@ -88,12 +88,6 @@ const ReportsSummary = (props) => {
           filter={true}
         ></AgGridColumn>
         <AgGridColumn
-          field="total_sba"
-          headerName="Total SBA"
-          sortable={true}
-          filter={true}
-        ></AgGridColumn>
-        <AgGridColumn
           field="total_penta1"
           headerName="Total PENTA1"
           sortable={true}

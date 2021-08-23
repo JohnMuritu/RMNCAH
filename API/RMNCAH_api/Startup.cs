@@ -75,6 +75,13 @@ namespace RMNCAH_api
                     };
                 });
 
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+                config.AddPolicy(Policies.Report, Policies.ReportPolicy());
+                config.AddPolicy(Policies.User, Policies.UserPolicy());
+            });
+
             // services.AddControllers();
             services.AddControllersWithViews();
 
@@ -96,6 +103,8 @@ namespace RMNCAH_api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -25,6 +25,7 @@ namespace RMNCAH_api.Data
         public virtual DbSet<DeliveryOptions> DeliveryOptions { get; set; }
         public virtual DbSet<AdultRemarksOptions> AdultRemarksOptions { get; set; }
         public virtual DbSet<ChildRemarksOptions> ChildRemarksOptions { get; set; }
+        public virtual DbSet<UserSignUpResource> UserSignUpResource { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
@@ -58,6 +59,18 @@ namespace RMNCAH_api.Data
                 Id = ROLE_ID,
                 Name = "ADMIN",
                 NormalizedName = "ADMIN"
+            });
+            builder.Entity<Role>().HasData(new Role
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "REPORT",
+                NormalizedName = "REPORT"
+            });
+            builder.Entity<Role>().HasData(new Role
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "USER",
+                NormalizedName = "USER"
             });
 
             var hasher = new PasswordHasher<User>();

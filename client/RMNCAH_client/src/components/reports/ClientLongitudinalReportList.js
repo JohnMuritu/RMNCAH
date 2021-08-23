@@ -160,11 +160,16 @@ const ClientLongitudinalReportList = (props) => {
             valueFormatter={dateFormatter}
           ></AgGridColumn>
           <AgGridColumn
-            field="sba"
-            headerName="SBA"
+            field="remarks_parent"
+            headerName="Remarks (Parent)"
             sortable={true}
             filter={true}
-            valueFormatter={dateFormatter}
+          ></AgGridColumn>
+          <AgGridColumn
+            field="delivery"
+            headerName="Delivery"
+            sortable={true}
+            filter={true}
           ></AgGridColumn>
           <AgGridColumn
             field="penta1"
@@ -195,8 +200,8 @@ const ClientLongitudinalReportList = (props) => {
             valueFormatter={dateFormatter}
           ></AgGridColumn>
           <AgGridColumn
-            field="remarks"
-            headerName="Remarks"
+            field="remarks_child"
+            headerName="Remarks (Child)"
             sortable={true}
             filter={true}
           ></AgGridColumn>

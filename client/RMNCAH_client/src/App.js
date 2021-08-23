@@ -17,8 +17,9 @@ const App = () => {
   const routing = useRoutes(routes(isLoggedIn));
   // const routing = useRoutes(routes);
   const AUTH_TOKEN = useSelector((state) => state.main_reducer.userToken);
+  const bearer_token = `Bearer ${AUTH_TOKEN}`;
   axios.defaults.baseURL = 'https://localhost:44346';
-  axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+  axios.defaults.headers.common['Authorization'] = bearer_token;
 
   return (
     <ThemeProvider theme={theme}>

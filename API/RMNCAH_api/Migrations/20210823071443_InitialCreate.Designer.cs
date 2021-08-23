@@ -10,7 +10,7 @@ using RMNCAH_api.Data;
 namespace RMNCAH_api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20210821152656_InitialCreate")]
+    [Migration("20210823071443_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -230,10 +230,6 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("phone_number")
                         .HasColumnType("text");
 
-                    b.Property<string>("Remarks")
-                        .HasColumnName("remarks")
-                        .HasColumnType("text");
-
                     b.Property<string>("Village")
                         .HasColumnName("village")
                         .HasColumnType("text");
@@ -262,6 +258,10 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("chv_name")
                         .HasColumnType("text");
 
+                    b.Property<string>("delivery")
+                        .HasColumnName("delivery")
+                        .HasColumnType("text");
+
                     b.Property<string>("deptClientId")
                         .HasColumnName("dept_client_id")
                         .HasColumnType("text");
@@ -286,9 +286,13 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("penta3")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime?>("sba")
-                        .HasColumnName("sba")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<string>("remarks_child")
+                        .HasColumnName("remarks_child")
+                        .HasColumnType("text");
+
+                    b.Property<string>("remarks_parent")
+                        .HasColumnName("remarks_parent")
+                        .HasColumnType("text");
 
                     b.HasKey("ClientClinicalDetailsId")
                         .HasName("pk_client_details_and_clinical_report_data");
@@ -338,10 +342,6 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("total_penta3")
                         .HasColumnType("integer");
 
-                    b.Property<int>("total_sba")
-                        .HasColumnName("total_sba")
-                        .HasColumnType("integer");
-
                     b.ToTable("clinical_aggregated_summary");
                 });
 
@@ -379,9 +379,23 @@ namespace RMNCAH_api.Migrations
                         new
                         {
                             Id = "2bb88694-a613-4cb1-b540-61b86713a098",
-                            ConcurrencyStamp = "a2b793a7-89c4-42d1-af61-3654847ca676",
+                            ConcurrencyStamp = "284ae6e6-7366-47d2-9cb3-9ee837313d71",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "cb85f759-ef4d-4f06-87ce-4d4857f4815d",
+                            ConcurrencyStamp = "30483cad-ce09-469e-b469-95f03fe030b8",
+                            Name = "REPORT",
+                            NormalizedName = "REPORT"
+                        },
+                        new
+                        {
+                            Id = "be564fa1-4e18-4f69-9cf2-449907b3e6ab",
+                            ConcurrencyStamp = "32729835-d6da-41b1-9b0f-076a19ed9409",
+                            Name = "USER",
+                            NormalizedName = "USER"
                         });
                 });
 
@@ -521,7 +535,7 @@ namespace RMNCAH_api.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             ChangePassword = 0,
-                            ConcurrencyStamp = "e527e389-4c3c-4d40-948d-038b8bf9f36b",
+                            ConcurrencyStamp = "29a64c5a-f819-454e-8583-2aaed81d5eef",
                             Email = "admin@myemail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -530,7 +544,7 @@ namespace RMNCAH_api.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYEMAIL.COM",
                             NormalizedUserName = "ADMIN@MYEMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEO+SN30Ciitbb3eN4nUkCgn0cHdQjb17WXb02ptGI2WV6BI6trqr9X0wT3pvrF9gPA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBf82WaxkkXjdsRRfTviDrPDNe7fCY4wbkNVodf9ZEb8H6dht/lHMeO00G1eSjCP2A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -622,6 +636,46 @@ namespace RMNCAH_api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RMNCAH_api.Models.Security.UserSignUpResource", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnName("user_id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasColumnName("email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnName("first_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobTitle")
+                        .HasColumnName("job_title")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .HasColumnName("last_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .HasColumnName("password")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserName")
+                        .HasColumnName("user_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserRole")
+                        .HasColumnName("user_role")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId")
+                        .HasName("pk_user_sign_up_resource");
+
+                    b.ToTable("user_sign_up_resource");
+                });
+
             modelBuilder.Entity("RMNCAH_api.Models.Security.UserToken", b =>
                 {
                     b.Property<string>("UserId")
@@ -672,7 +726,7 @@ namespace RMNCAH_api.Migrations
                         new
                         {
                             id = 2,
-                            option = "Miscarried"
+                            option = "Miscarriage"
                         },
                         new
                         {

@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box';
 import { Button, Grid } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 
-import * as ACTION_TYPES from '../actions/actions';
+import * as ACTION_TYPES from '../../actions/actions';
 
 export default function BasicDateRangePicker(props) {
   const [value, setValue] = React.useState([null, null]);

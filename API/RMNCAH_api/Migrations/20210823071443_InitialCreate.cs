@@ -55,12 +55,13 @@ namespace RMNCAH_api.Migrations
                     anc4 = table.Column<DateTime>(nullable: true),
                     anc5 = table.Column<DateTime>(nullable: true),
                     edd = table.Column<DateTime>(nullable: true),
-                    sba = table.Column<DateTime>(nullable: true),
+                    remarks_parent = table.Column<string>(nullable: true),
+                    delivery = table.Column<string>(nullable: true),
                     penta1 = table.Column<DateTime>(nullable: true),
                     penta2 = table.Column<DateTime>(nullable: true),
                     penta3 = table.Column<DateTime>(nullable: true),
                     mr1 = table.Column<DateTime>(nullable: true),
-                    remarks = table.Column<string>(nullable: true)
+                    remarks_child = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,7 +78,6 @@ namespace RMNCAH_api.Migrations
                     total_anc4 = table.Column<int>(nullable: false),
                     total_anc5 = table.Column<int>(nullable: false),
                     total_edd = table.Column<int>(nullable: false),
-                    total_sba = table.Column<int>(nullable: false),
                     total_penta1 = table.Column<int>(nullable: false),
                     total_penta2 = table.Column<int>(nullable: false),
                     total_penta3 = table.Column<int>(nullable: false),
@@ -125,6 +125,24 @@ namespace RMNCAH_api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_roles", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "user_sign_up_resource",
+                columns: table => new
+                {
+                    user_id = table.Column<string>(nullable: false),
+                    user_name = table.Column<string>(nullable: true),
+                    first_name = table.Column<string>(nullable: true),
+                    last_name = table.Column<string>(nullable: true),
+                    job_title = table.Column<string>(nullable: true),
+                    email = table.Column<string>(nullable: true),
+                    password = table.Column<string>(nullable: true),
+                    user_role = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_user_sign_up_resource", x => x.user_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -349,7 +367,7 @@ namespace RMNCAH_api.Migrations
                 values: new object[,]
                 {
                     { 1, "Abortion" },
-                    { 2, "Miscarried" },
+                    { 2, "Miscarriage" },
                     { 3, "Still birth" },
                     { 4, "Maternal death" }
                 });
@@ -372,12 +390,17 @@ namespace RMNCAH_api.Migrations
             migrationBuilder.InsertData(
                 table: "roles",
                 columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
-                values: new object[] { "2bb88694-a613-4cb1-b540-61b86713a098", "a2b793a7-89c4-42d1-af61-3654847ca676", "ADMIN", "ADMIN" });
+                values: new object[,]
+                {
+                    { "2bb88694-a613-4cb1-b540-61b86713a098", "284ae6e6-7366-47d2-9cb3-9ee837313d71", "ADMIN", "ADMIN" },
+                    { "cb85f759-ef4d-4f06-87ce-4d4857f4815d", "30483cad-ce09-469e-b469-95f03fe030b8", "REPORT", "REPORT" },
+                    { "be564fa1-4e18-4f69-9cf2-449907b3e6ab", "32729835-d6da-41b1-9b0f-076a19ed9409", "USER", "USER" }
+                });
 
             migrationBuilder.InsertData(
                 table: "users",
                 columns: new[] { "id", "access_failed_count", "active", "change_password", "concurrency_stamp", "email", "email_confirmed", "first_name", "job_title", "last_name", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
-                values: new object[] { "46ba742f-f729-4bb3-81f3-ad4e07c9cd30", 0, true, 0, "e527e389-4c3c-4d40-948d-038b8bf9f36b", "admin@myemail.com", true, "Admin", "System Administrator", "Admin", false, null, "ADMIN@MYEMAIL.COM", "ADMIN@MYEMAIL.COM", "AQAAAAEAACcQAAAAEO+SN30Ciitbb3eN4nUkCgn0cHdQjb17WXb02ptGI2WV6BI6trqr9X0wT3pvrF9gPA==", null, false, "", false, "admin@myemail.com" });
+                values: new object[] { "46ba742f-f729-4bb3-81f3-ad4e07c9cd30", 0, true, 0, "29a64c5a-f819-454e-8583-2aaed81d5eef", "admin@myemail.com", true, "Admin", "System Administrator", "Admin", false, null, "ADMIN@MYEMAIL.COM", "ADMIN@MYEMAIL.COM", "AQAAAAEAACcQAAAAEBf82WaxkkXjdsRRfTviDrPDNe7fCY4wbkNVodf9ZEb8H6dht/lHMeO00G1eSjCP2A==", null, false, "", false, "admin@myemail.com" });
 
             migrationBuilder.InsertData(
                 table: "user_roles",
@@ -467,6 +490,9 @@ namespace RMNCAH_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "user_roles");
+
+            migrationBuilder.DropTable(
+                name: "user_sign_up_resource");
 
             migrationBuilder.DropTable(
                 name: "user_tokens");

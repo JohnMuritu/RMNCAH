@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RMNCAH_api.Data;
@@ -31,18 +33,22 @@ namespace RMNCAH_api.Controllers
         }
 
         [HttpGet]
-        public List<User> getClientDetails()
+        public List<UserSignUpResource> getClientDetails()
         {
             using (_applicationDbContext)
             {
-                return _applicationDbContext.Users.OrderBy(c => c.LastName).ToList();
+                string sqlQuery = "select u.id user_id, user_name, first_name, last_name, job_title, email, r.name user_role, '' \"password\" " +
+                    "from public.users u inner join user_roles ur on u.id = ur.user_id " +
+                    "inner join roles r on ur.role_id = r.id";
+                return _applicationDbContext.UserSignUpResource.FromSqlRaw(sqlQuery).ToList();
+                //return _applicationDbContext.Users.OrderBy(c => c.LastName).ToList();
             }
         }
-        private string GenerateJwt(User user)
+        private string GenerateJwt(User user, IList<string> roles)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var claims = new Claim[] {
+            var claims = new List<Claim> {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
@@ -53,6 +59,11 @@ namespace RMNCAH_api.Controllers
                 new Claim("JobTitle",  user.JobTitle),
             };
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_jwtSettings.ExpirationInDays));
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim("role", role));
+            }
 
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
@@ -65,6 +76,7 @@ namespace RMNCAH_api.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        [Authorize(Policy = Policies.Admin)]
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp(UserSignUpResource userSignUpResource)
         {
@@ -83,15 +95,16 @@ namespace RMNCAH_api.Controllers
             {
                 var newUser = _applicationDbContext.Users.Where(r => r.UserName == userSignUpResource.UserName).FirstOrDefault();
 
-                var claims = await _userManager.GetClaimsAsync(newUser);
-                var result = await _userManager.RemoveClaimsAsync(newUser, claims);
+                //var claims = await _userManager.GetClaimsAsync(newUser);
+                //var result = await _userManager.RemoveClaimsAsync(newUser, claims);
+                var addUserRole = await _userManager.AddToRoleAsync(newUser, userSignUpResource.UserRole);
 
                 /*if (userSignUpResource.UserRole == "ADMIN")
                 {
                     var addUserRole = await _userManager.AddToRoleAsync(newUser, userSignUpResource.UserRole);
-                }
+                }*/
 
-                if (userSignUpResource.ChangePwdOnLogin == true)
+                /*if (userSignUpResource.ChangePwdOnLogin == true)
                 {
                     newUser.ChangePassword = 1;
                     _applicationDbContext.SaveChanges();
@@ -108,6 +121,7 @@ namespace RMNCAH_api.Controllers
             return Problem(userCreateResult.Errors.First().Description, null, 500);
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpPost("UpdateProfile")]
         public async Task<IActionResult> UpdateProfile(UserSignUpResource userSignUpResource)
         {
@@ -146,15 +160,16 @@ namespace RMNCAH_api.Controllers
             {
                 //_logger.Information("{Username} logged in successfully", user.UserName);
 
-                //var roles = await _userManager.GetRolesAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
 
-                return Ok(GenerateJwt(user));
+                return Ok(GenerateJwt(user, roles));
             }
 
             //_logger.Warning("Failed login attempt for : {Username}", user.UserName);
             return Unauthorized("Invalid credentials.");
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpGet("changepassword")]
         public int ChangePwdCheck(UserChangePassword userChangePassword)
         {
@@ -165,6 +180,7 @@ namespace RMNCAH_api.Controllers
             return user.ChangePassword;
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpPost("changepassword")]
         public async Task<IActionResult> ChangePassword(UserChangePassword userChangePassword)
         {

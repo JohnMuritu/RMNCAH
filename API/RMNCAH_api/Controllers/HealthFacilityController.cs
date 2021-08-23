@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RMNCAH_api.Data;
+using RMNCAH_api.Models.Security;
 using RMNCAH_api.Models.Utils;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ namespace RMNCAH_api.Controllers
             _applicationDbContext = applicationDbContext;
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpGet]
         public List<HealthFacilities> getHealthFacilities()
         {

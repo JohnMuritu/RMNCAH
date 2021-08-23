@@ -13,7 +13,6 @@ namespace RMNCAH_api.Models.Reports
         public int total_anc4 { get; set; }
         public int total_anc5 { get; set; }
         public int total_edd { get; set; }
-        public int total_sba { get; set; }
         public int total_penta1 { get; set; }
         public int total_penta2 { get; set; }
         public int total_penta3 { get; set; }

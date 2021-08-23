@@ -26,21 +26,11 @@ import {
 import NavItem from './NavItem';
 
 const items = [
-  // {
-  //   href: '/app/dashboard',
-  //   icon: BarChartIcon,
-  //   title: 'Dashboard'
-  // },
   {
     href: '/app/registerclient',
     icon: Book,
     title: 'Clients'
   },
-  // {
-  //   href: '/app/clientClinicalDetails',
-  //   icon: UsersIcon,
-  //   title: 'Client Clinical Details'
-  // },
   {
     href: '/app/reports',
     icon: BarChartIcon,
@@ -51,26 +41,11 @@ const items = [
     icon: UserIcon,
     title: 'Account'
   },
-  // {
-  //   href: '/app/settings',
-  //   icon: SettingsIcon,
-  //   title: 'Settings'
-  // },
-  // {
-  //   href: '/login',
-  //   icon: LockIcon,
-  //   title: 'Login'
-  // },
   {
     href: '/app/adduser',
     icon: UserPlusIcon,
     title: 'Add User'
   }
-  // {
-  //   href: '/404',
-  //   icon: AlertCircleIcon,
-  //   title: 'Error'
-  // }
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
@@ -78,6 +53,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const firstName = useSelector((state) => state.main_reducer.user.FirstName);
   const lastName = useSelector((state) => state.main_reducer.user.LastName);
   const jobTitle = useSelector((state) => state.main_reducer.user.JobTitle);
+  const userRole = useSelector((state) => state.main_reducer.user.role);
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -121,14 +97,25 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       <Divider />
       <Box sx={{ p: 2 }}>
         <List>
-          {items.map((item) => (
+          {/* {items.map((item) => (
             <NavItem
               href={item.href}
               key={item.title}
               title={item.title}
               icon={item.icon}
             />
-          ))}
+          ))} */}
+          <NavItem href="/app/registerclient" title="Clients" icon={Book} />
+
+          {(userRole === 'REPORT' || userRole === 'ADMIN') && (
+            <NavItem href="/app/reports" title="Reports" icon={BarChartIcon} />
+          )}
+
+          <NavItem href="/app/account" title="Account" icon={UserIcon} />
+
+          {userRole === 'ADMIN' && (
+            <NavItem href="/app/adduser" title="Add User" icon={UserPlusIcon} />
+          )}
         </List>
       </Box>
       <Box sx={{ flexGrow: 1 }} />

@@ -15,3 +15,5 @@ export const UPDATE_COMPONENT = 'UPDATE_COMPONENT';
 
 export const DATE_FROM = 'DATE_FROM';
 export const DATE_TO = 'DATE_TO';
+
+export const SET_USER_DETAILS = 'SET_USER_DETAILS';

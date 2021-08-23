@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RMNCAH_api.Data;
+using RMNCAH_api.Models.Security;
 using RMNCAH_api.Models.Utils;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ namespace RMNCAH_api.Controllers
             _applicationDbContext = applicationDbContext;
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpGet("deliveryoptions")]
         public List<DeliveryOptions> getDeliveryOptions()
         {
@@ -28,6 +31,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpGet("adultremarks")]
         public List<AdultRemarksOptions> getAdultRemarksOptions()
         {
@@ -37,6 +41,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpGet("childremarks")]
         public List<ChildRemarksOptions> getChildRemarksOptions()
         {

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RMNCAH_api.Controllers
 {
@@ -24,6 +25,7 @@ namespace RMNCAH_api.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpGet("ClientDetails")]
         public List<ClientDetails> getClientDetails()
         {
@@ -33,6 +35,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpPost("AddClientDetails")]
         public ClientDetails AddClientDetails(ClientDetails cd)
         {
@@ -48,6 +51,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpPost("UpdateClientDetails")]
         public ClientDetails UpdateClientDetails(ClientDetails cd)
         {
@@ -76,6 +80,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpGet("ClientClinicalDetails/{clientId}")]
         public List<ClientClinicalDetails> getClientClinicaltDetails(Guid clientId)
         {
@@ -89,6 +94,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpPost("AddClientClinicalDetails")]
         public ClientClinicalDetails AddClientClinicalDetails(ClientClinicalDetails cd)
         {
@@ -110,6 +116,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
+        [Authorize(Policy = Policies.User)]
         [HttpPost("UpdateClientClinicalDetails")]
         public ClientClinicalDetails UpdateClientClinicalDetails(ClientClinicalDetails cd)
         {

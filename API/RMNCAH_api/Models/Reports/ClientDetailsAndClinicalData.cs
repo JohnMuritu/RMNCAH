@@ -26,11 +26,12 @@ namespace RMNCAH_api.Models.Reports
         public DateTime? anc4 { get; set; }
         public DateTime? anc5 { get; set; }
         public DateTime? edd { get; set; }
-        public DateTime? sba { get; set; }
+        public string remarks_parent { get; set; }
+        public string delivery { get; set; }
         public DateTime? penta1 { get; set; }
         public DateTime? penta2 { get; set; }
         public DateTime? penta3 { get; set; }
         public DateTime? mr1 { get; set; }
-        public string Remarks { get; set; }
+        public string remarks_child { get; set; }
     }
 }

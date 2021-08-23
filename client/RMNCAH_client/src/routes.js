@@ -9,7 +9,7 @@ import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
 import NotFound from 'src/pages/NotFound';
 import ProductList from 'src/pages/ProductList';
-import Register from 'src/pages/Register';
+import RegisterUserPage from 'src/pages/RegisterUserPage';
 import Settings from 'src/pages/Settings';
 import InlineDatePickerDemo from './components/client/InlineDatePickerDemo';
 import Test from './components/client/Test';
@@ -24,7 +24,7 @@ const routes = (isLoggedIn) => [
       { path: 'registerclient', element: <RegisterClient /> },
       { path: 'clientClinicalDetails', element: <ClientClinicalDetailsPage /> },
       { path: 'account', element: <Account /> },
-      { path: 'adduser', element: <Register /> },
+      { path: 'adduser', element: <RegisterUserPage /> },
       { path: 'customers', element: <Test /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'products', element: <InlineDatePickerDemo /> },
