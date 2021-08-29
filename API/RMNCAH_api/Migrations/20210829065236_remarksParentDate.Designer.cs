@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RMNCAH_api.Data;
@@ -9,9 +10,10 @@ using RMNCAH_api.Data;
 namespace RMNCAH_api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210829065236_remarksParentDate")]
+    partial class remarksParentDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -358,71 +360,6 @@ namespace RMNCAH_api.Migrations
                     b.ToTable("clinical_aggregated_summary");
                 });
 
-            modelBuilder.Entity("RMNCAH_api.Models.Reports.Defaulters", b =>
-                {
-                    b.Property<Guid>("ClientClinicalDetailsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("client_clinical_details_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("delivery")
-                        .HasColumnName("delivery")
-                        .HasColumnType("text");
-
-                    b.Property<string>("deliveryDefaulter")
-                        .HasColumnName("delivery_defaulter")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("delivery_date")
-                        .HasColumnName("delivery_date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("dept_client_id")
-                        .HasColumnName("dept_client_id")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("edd")
-                        .HasColumnName("edd")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("facility_name")
-                        .HasColumnName("facility_name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("full_names")
-                        .HasColumnName("full_names")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("mr1")
-                        .HasColumnName("mr1")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("mr1Defaulter")
-                        .HasColumnName("mr1defaulter")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("penta1")
-                        .HasColumnName("penta1")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("penta1Defaulter")
-                        .HasColumnName("penta1defaulter")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("penta3")
-                        .HasColumnName("penta3")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("penta3Defaulter")
-                        .HasColumnName("penta3defaulter")
-                        .HasColumnType("text");
-
-                    b.HasKey("ClientClinicalDetailsId")
-                        .HasName("pk_defaulters");
-
-                    b.ToTable("defaulters");
-                });
-
             modelBuilder.Entity("RMNCAH_api.Models.Security.Role", b =>
                 {
                     b.Property<string>("Id")
@@ -457,21 +394,21 @@ namespace RMNCAH_api.Migrations
                         new
                         {
                             Id = "2bb88694-a613-4cb1-b540-61b86713a098",
-                            ConcurrencyStamp = "86058ec6-635c-4904-b3f0-07d96861ad99",
+                            ConcurrencyStamp = "2da2f64a-be7c-4585-aaf6-8f5faf631f6c",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b0ffd149-2abf-40e8-b49f-a58383146684",
-                            ConcurrencyStamp = "7e4f7d86-d5a5-4a14-9b7d-aa31fa345070",
+                            Id = "b652ecd0-19ae-434b-9dea-1a9e28f753ac",
+                            ConcurrencyStamp = "ba81a4b9-356f-4f15-ae1e-827d48bab577",
                             Name = "REPORT",
                             NormalizedName = "REPORT"
                         },
                         new
                         {
-                            Id = "029f93f3-4a32-4508-8620-072745a1d54f",
-                            ConcurrencyStamp = "cf440651-d6ec-492c-8287-ec08cb345836",
+                            Id = "1d63151c-6113-4641-a6b4-f3c252912ce0",
+                            ConcurrencyStamp = "c9a8b314-c953-4a53-b6fd-908fe7a5b425",
                             Name = "USER",
                             NormalizedName = "USER"
                         });
@@ -613,7 +550,7 @@ namespace RMNCAH_api.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             ChangePassword = 0,
-                            ConcurrencyStamp = "1e32cb06-d162-4af5-b579-042786b8957a",
+                            ConcurrencyStamp = "d0d585f2-61eb-4668-a795-8163e51c300f",
                             Email = "admin@myemail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -622,7 +559,7 @@ namespace RMNCAH_api.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYEMAIL.COM",
                             NormalizedUserName = "ADMIN@MYEMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECwGaQrwyS2Pf5XMiXmQnCPAkIsD/gEAc1k42YzzjMu9S04iT5WBB0JbncdgQlzmTw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGvZwvr5FeZVbQRqIwveC7n2i0gsdC9X0RwqW9m81gGGVyhXldjgzo9RzPIQIgz5ow==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

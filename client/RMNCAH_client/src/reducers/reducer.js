@@ -8,7 +8,8 @@ const initialState = {
   authenticated: false,
   clientDetails: {
     clientId: '',
-    chvName: '',
+    chvId: '',
+    chv: null,
     deptClientId: '',
     fullNames: '',
     dob: null,
@@ -20,7 +21,7 @@ const initialState = {
     //   facilityName: ''
     // },
     mfl_code: null,
-    healthFacility: null,
+    hfLinked: null,
     otherHFAttended: '',
     hivStatusKnown: '',
     testDone: ''
@@ -54,6 +55,11 @@ const initialState = {
     password: '',
     confirmPassword: ''
   },
+  chvDetails: {
+    chv_id: 0,
+    chv_name: '',
+    active: '1'
+  },
   update_client_list: 0,
   client_list: [],
   update_component: 0,
@@ -79,6 +85,9 @@ const reducer = (state = initialState, action) => {
 
     case ACTION_TYPES.SET_USER_DETAILS:
       return { ...state, userDetails: action.payload };
+
+    case ACTION_TYPES.SET_CHV_DETAILS:
+      return { ...state, chvDetails: action.payload };
 
     case ACTION_TYPES.UPDATE_CLIENT_LIST:
       return { ...state, update_client_list: action.payload };

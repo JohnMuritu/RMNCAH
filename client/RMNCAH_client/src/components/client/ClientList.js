@@ -88,9 +88,8 @@ const ClientList = (props) => {
         }}
       >
         <AgGridColumn field="clientId" hide={true}></AgGridColumn>
-        <AgGridColumn field="clientId" hide={true}></AgGridColumn>
         <AgGridColumn
-          field="chvName"
+          field="chv.chv_name"
           headerName="CHV Name"
           sortable={true}
           filter={true}

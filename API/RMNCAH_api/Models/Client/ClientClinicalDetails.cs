@@ -29,9 +29,11 @@ namespace RMNCAH_api.Models.Client
         public int? remarksParent { get; set; }
         [ForeignKey("remarksParent")]
         public AdultRemarksOptions AdultRemarksOptions { get; set; }
+        public DateTime? remarksParentDate { get; set; }
         public int? delivery { get; set; }
         [ForeignKey("delivery")]
         public DeliveryOptions deliveryOptions { get; set; }
+        public DateTime? deliveryDate { get; set; }
         public DateTime? penta1 { get; set; }
         public DateTime? penta2 { get; set; }
         public DateTime? penta3 { get; set; }
@@ -39,6 +41,7 @@ namespace RMNCAH_api.Models.Client
         public int? remarksChild { get; set; }
         [ForeignKey("remarksChild")]
         public ChildRemarksOptions ChildRemarksOptions { get; set; }
+        public DateTime? remarksChildDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public string UpdatedBy { get; set; }

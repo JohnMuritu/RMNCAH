@@ -154,6 +154,13 @@ const ClientClinicalDetailsList = (props) => {
           filter={true}
         ></AgGridColumn>
         <AgGridColumn
+          field="remarksParentDate"
+          headerName="Remarks Parent Date"
+          sortable={true}
+          filter={true}
+          valueFormatter={dateFormatter}
+        ></AgGridColumn>
+        <AgGridColumn
           field="delivery"
           headerName="Delivery"
           hide={true}
@@ -163,6 +170,13 @@ const ClientClinicalDetailsList = (props) => {
           headerName="Delivery"
           sortable={true}
           filter={true}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="deliveryDate"
+          headerName="Delivery Date"
+          sortable={true}
+          filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
         <AgGridColumn
           field="penta1"
@@ -198,6 +212,13 @@ const ClientClinicalDetailsList = (props) => {
           headerName="Remarks Child"
           sortable={true}
           filter={true}
+        ></AgGridColumn>
+        <AgGridColumn
+          field="remarksChildDate"
+          headerName="Remarks Child Date"
+          sortable={true}
+          filter={true}
+          valueFormatter={dateFormatter}
         ></AgGridColumn>
       </AgGridReact>
     </div>

@@ -116,6 +116,10 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           {userRole === 'ADMIN' && (
             <NavItem href="/app/adduser" title="Add User" icon={UserPlusIcon} />
           )}
+
+          {userRole === 'ADMIN' && (
+            <NavItem href="/app/addchv" title="Add CHV" icon={Book} />
+          )}
         </List>
       </Box>
       <Box sx={{ flexGrow: 1 }} />

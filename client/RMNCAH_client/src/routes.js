@@ -14,6 +14,7 @@ import Settings from 'src/pages/Settings';
 import InlineDatePickerDemo from './components/client/InlineDatePickerDemo';
 import Test from './components/client/Test';
 import ReportsPage from './pages/ReportsPage';
+import AddCHVPage from './pages/AddCHVPage';
 
 const routes = (isLoggedIn) => [
   {
@@ -30,6 +31,7 @@ const routes = (isLoggedIn) => [
       { path: 'products', element: <InlineDatePickerDemo /> },
       { path: 'settings', element: <Settings /> },
       { path: 'reports', element: <ReportsPage /> },
+      { path: 'addchv', element: <AddCHVPage /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },

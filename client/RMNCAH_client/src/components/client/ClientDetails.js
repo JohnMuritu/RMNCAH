@@ -42,7 +42,9 @@ const ClientDetails = (props) => {
   // const update_client_details = useSelector(state => state.main_reducer.update_client_details);
 
   const [healthFacilities, setHealthFacilities] = useState([]);
+  const [CHVs, setCHVs] = useState([]);
   const [healthFacilitiesFetched, setHealthFacilitiesFetched] = useState(false);
+  const [CHVsFetched, setCHVsFetched] = useState(false);
 
   const handleSave = (clientDetails) => {
     console.log(clientDetails);
@@ -100,15 +102,32 @@ const ClientDetails = (props) => {
       });
   };
 
+  const getCHVs = () => {
+    axios
+      .get('/api/utils/chvs')
+      .then((response) => {
+        setCHVs(response.data);
+        console.log('fetching CHVs');
+        setCHVsFetched(true);
+      })
+      .catch((error) => {
+        console.log(`error : ${error}`);
+      });
+  };
+
   useEffect(() => {
     formik.setValues(clientDetailsFetched);
     if (!healthFacilitiesFetched) {
       getHealthFacilities();
     }
+
+    if (!CHVsFetched) {
+      getCHVs();
+    }
   }, [clientDetailsFetched, updateComponent]);
 
   const SignupSchema = Yup.object().shape({
-    chvName: Yup.string().required('CHV Name is required'),
+    chvId: Yup.string().required('CHV Name is required'),
     deptClientId: Yup.string().required('Client ID is required'),
     fullNames: Yup.string().required('Client Name is required'),
     dob: Yup.date().required('Required'),
@@ -132,7 +151,8 @@ const ClientDetails = (props) => {
   const formik = useFormik({
     initialValues: {
       clientId: '',
-      chvName: '',
+      chvId: '',
+      chv: null,
       deptClientId: '',
       fullNames: '',
       dob: null,
@@ -163,17 +183,46 @@ const ClientDetails = (props) => {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item md={3} xs={12}>
+            {/* <Grid item md={3} xs={12}>
               <TextField
                 fullWidth
                 label="CHV Name"
                 name="chvName"
                 onChange={formik.handleChange}
-                // onBlur={handleBlur}
                 value={formik.values.chvName}
                 variant="outlined"
                 helperText={formik.touched.chvName && formik.errors.chvName}
                 error={Boolean(formik.touched.chvName && formik.errors.chvName)}
+                size="small"
+              />
+            </Grid> */}
+
+            <Grid item md={3} xs={12}>
+              <Autocomplete
+                fullWidth
+                disableClearable
+                forcePopupIcon={false}
+                name="chv"
+                // freeSolo
+                value={formik.values.chv}
+                options={CHVs}
+                getOptionLabel={(option) => option.chv_name}
+                // getOptionSelected={(option, value) =>
+                //   option.mflCode === value.mflCode
+                // }
+                onChange={(event, newValue) => {
+                  formik.setFieldValue('chvId', newValue.chv_id);
+                  formik.setFieldValue('chv', newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="CHV Name"
+                    variant="outlined"
+                    helperText={formik.touched.chvId && formik.errors.chvId}
+                    error={Boolean(formik.touched.chvId && formik.errors.chvId)}
+                  />
+                )}
                 size="small"
               />
             </Grid>

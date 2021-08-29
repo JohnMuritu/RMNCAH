@@ -26,6 +26,8 @@ namespace RMNCAH_api.Data
         public virtual DbSet<AdultRemarksOptions> AdultRemarksOptions { get; set; }
         public virtual DbSet<ChildRemarksOptions> ChildRemarksOptions { get; set; }
         public virtual DbSet<UserSignUpResource> UserSignUpResource { get; set; }
+        public virtual DbSet<Chvs> Chvs { get; set; }
+        public virtual DbSet<Defaulters> Defaulters { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
@@ -46,8 +48,9 @@ namespace RMNCAH_api.Data
             builder.Entity<ChildRemarksOptions>().ToTable("child_remarks_options");
             builder.Entity<HealthFacilities>().ToTable("health_facilities");
             builder.Entity<ClientDetails>().ToTable("client_details");
-            builder.Entity<ClientClinicalDetails>().ToTable("client_clinical_details");      
-            
+            builder.Entity<ClientClinicalDetails>().ToTable("client_clinical_details");
+            builder.Entity<Chvs>().ToTable("chvs");
+
             builder.Entity<ClinicalAggregatedSummary>().HasNoKey();
 
             string ADMIN_ID = Guid.Parse("46ba742f-f729-4bb3-81f3-ad4e07c9cd30").ToString(); // Guid.NewGuid().ToString();

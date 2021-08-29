@@ -17,3 +17,4 @@ export const DATE_FROM = 'DATE_FROM';
 export const DATE_TO = 'DATE_TO';
 
 export const SET_USER_DETAILS = 'SET_USER_DETAILS';
+export const SET_CHV_DETAILS = 'SET_CHV_DETAILS';

@@ -22,7 +22,9 @@ namespace RMNCAH_api.Models.Client
 
         [Key]
         public Guid ClientId { get; set; }
-        public string chvName { get; set; }
+        public int chv_id { get; set; }
+        [ForeignKey("chv_id")]
+        public Chvs chv { get; set; }
         public string deptClientId { get; set; }
         public string FullNames { get; set; }
 

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace RMNCAH_api.Controllers
 {
@@ -31,7 +32,10 @@ namespace RMNCAH_api.Controllers
         {
             using (_applicationDbContext)
             {
-                return _applicationDbContext.ClientDetails.Include(h => h.HFLinked).OrderBy(c => c.FullNames).ToList();
+                return _applicationDbContext.ClientDetails
+                    .Include(c => c.chv)
+                    .Include(h => h.HFLinked)
+                    .OrderBy(c => c.FullNames).ToList();
             }
         }
 
@@ -40,10 +44,11 @@ namespace RMNCAH_api.Controllers
         public ClientDetails AddClientDetails(ClientDetails cd)
         {
             using (_applicationDbContext)
-            {              
-                cd.CreatedBy = _userManager.GetUserId(User);
+            {
+                cd.CreatedBy = User.FindFirst(ClaimTypes.NameIdentifier).Value; // _userManager.GetUserId(User);
                 cd.CreatedDate = DateTime.Now;
 
+                _applicationDbContext.Chvs.Attach(cd.chv);
                 _applicationDbContext.HealthFacility.Attach(cd.HFLinked);
                 _applicationDbContext.ClientDetails.Add(cd);
                 _applicationDbContext.SaveChanges();
@@ -60,7 +65,7 @@ namespace RMNCAH_api.Controllers
                 ClientDetails details = _applicationDbContext.ClientDetails
                     .Where(r => r.ClientId == cd.ClientId)
                     .FirstOrDefault();
-                details.chvName = cd.chvName;
+                details.chv_id = cd.chv_id;
                 details.deptClientId = cd.deptClientId;
                 details.FullNames = cd.FullNames;
                 details.DOB = cd.DOB;
@@ -72,7 +77,7 @@ namespace RMNCAH_api.Controllers
                 details.OtherHFAttended = cd.OtherHFAttended;
                 details.HIVStatusKnown = cd.HIVStatusKnown;
                 details.testDone = cd.testDone;
-                details.UpdatedBy = _userManager.GetUserId(User);
+                details.UpdatedBy = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 details.UpdatedDate = DateTime.Now;
 
                 _applicationDbContext.SaveChanges();
@@ -100,7 +105,7 @@ namespace RMNCAH_api.Controllers
         {
             using (_applicationDbContext)
             {
-                cd.CreatedBy = _userManager.GetUserId(User);
+                cd.CreatedBy = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 cd.CreatedDate = DateTime.Now;
 
                 if (cd.remarksChild == 0)
@@ -133,13 +138,16 @@ namespace RMNCAH_api.Controllers
                 details.anc5 = cd.anc5;
                 details.edd = cd.edd;
                 details.remarksParent = cd.remarksParent == 0 ? null : cd.remarksParent;
-                details.delivery = cd.delivery == 0 ? null : cd.delivery; ;
+                details.remarksParentDate = cd.remarksParentDate;
+                details.delivery = cd.delivery == 0 ? null : cd.delivery;
+                details.deliveryDate = cd.deliveryDate;
                 details.penta1 = cd.penta1;
                 details.penta2 = cd.penta2;
                 details.penta3 = cd.penta3;
                 details.mr1 = cd.mr1;
-                details.remarksChild = cd.remarksChild == 0 ? null : cd.remarksChild; ;
-                details.UpdatedBy = _userManager.GetUserId(User);
+                details.remarksChild = cd.remarksChild == 0 ? null : cd.remarksChild;
+                details.remarksChildDate = cd.remarksChildDate;
+                details.UpdatedBy = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 details.UpdatedDate = DateTime.Now;
 
                 _applicationDbContext.SaveChanges();

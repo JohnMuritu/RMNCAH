@@ -259,12 +259,15 @@ const ClientClinicalDetails = (props) => {
       anc5: null,
       edd: null,
       remarksParent: 0,
+      remarksParentDate: null,
       delivery: 0,
+      deliveryDate: null,
       penta1: null,
       penta2: null,
       penta3: null,
       mr1: null,
-      remarksChild: 0
+      remarksChild: 0,
+      remarksChildDate: null
     },
     onSubmit: (values) => {
       handleSave(values);
@@ -294,6 +297,7 @@ const ClientClinicalDetails = (props) => {
                 inputProps={{
                   readOnly: true
                 }}
+                size="small"
               />
             </Grid>
             <Grid item md={3} xs={12}>
@@ -306,6 +310,7 @@ const ClientClinicalDetails = (props) => {
                 inputProps={{
                   readOnly: true
                 }}
+                size="small"
               />
             </Grid>
             <Grid item md={3} xs={12}>
@@ -318,6 +323,7 @@ const ClientClinicalDetails = (props) => {
                 inputProps={{
                   readOnly: true
                 }}
+                size="small"
               />
             </Grid>
 
@@ -329,6 +335,7 @@ const ClientClinicalDetails = (props) => {
                 value={formik.values.babyName}
                 onChange={formik.handleChange}
                 variant="outlined"
+                size="small"
               />
             </Grid>
           </Grid>
@@ -387,6 +394,7 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('anc3', val);
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -403,6 +411,7 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('anc4', val);
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -419,13 +428,13 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('anc5', val);
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
                 <KeyboardDatePicker
                   fullWidth
                   autoOk
-                  disableFuture={true}
                   variant="inline"
                   inputVariant="outlined"
                   label="EDD"
@@ -435,6 +444,7 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('edd', val);
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -454,6 +464,7 @@ const ClientClinicalDetails = (props) => {
                     formik.setFieldValue('mr1', null);
                     formik.setFieldValue('remarksChild', null);
                   }}
+                  size="small"
                 >
                   <MenuItem value={0}>Select</MenuItem>
                   {adultRemarksOptions &&
@@ -463,6 +474,27 @@ const ClientClinicalDetails = (props) => {
                       </MenuItem>
                     ))}
                 </TextField>
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <KeyboardDatePicker
+                  disabled={
+                    parentRemarkSelected === 'Select' ||
+                    parentRemarkSelected === null
+                  }
+                  fullWidth
+                  autoOk
+                  disableFuture={true}
+                  variant="inline"
+                  inputVariant="outlined"
+                  label="Remarks Parent Date"
+                  format="dd-MMM-yyyy"
+                  value={formik.values.remarksParentDate}
+                  InputAdornmentProps={{ position: 'end' }}
+                  onChange={(val) => {
+                    formik.setFieldValue('remarksParentDate', val);
+                  }}
+                  size="small"
+                />
               </Grid>
               <Grid item md={3} xs={12}>
                 <TextField
@@ -478,6 +510,7 @@ const ClientClinicalDetails = (props) => {
                   label="Delivery"
                   value={formik.values.delivery}
                   onChange={formik.handleChange}
+                  size="small"
                 >
                   <MenuItem value={0}>Select</MenuItem>
                   {deliveryOptions &&
@@ -501,6 +534,29 @@ const ClientClinicalDetails = (props) => {
                   disableFuture={true}
                   variant="inline"
                   inputVariant="outlined"
+                  label="Delivery Date"
+                  format="dd-MMM-yyyy"
+                  value={formik.values.deliveryDate}
+                  InputAdornmentProps={{ position: 'end' }}
+                  onChange={(val) => {
+                    formik.setFieldValue('deliveryDate', val);
+                  }}
+                  size="small"
+                />
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <KeyboardDatePicker
+                  disabled={
+                    parentRemarkSelected === 'Abortion' ||
+                    parentRemarkSelected === 'Still birth' ||
+                    parentRemarkSelected === 'Maternal death' ||
+                    parentRemarkSelected === 'Miscarriage'
+                  }
+                  fullWidth
+                  autoOk
+                  disableFuture={true}
+                  variant="inline"
+                  inputVariant="outlined"
                   label="PENTA 1"
                   format="dd-MMM-yyyy"
                   value={formik.values.penta1}
@@ -508,6 +564,7 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('penta1', val);
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -530,6 +587,7 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('penta2', val);
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -552,6 +610,7 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('penta3', val);
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -574,6 +633,7 @@ const ClientClinicalDetails = (props) => {
                   onChange={(val) => {
                     formik.setFieldValue('mr1', val);
                   }}
+                  size="small"
                 />
               </Grid>
               <Grid item md={3} xs={12}>
@@ -590,6 +650,7 @@ const ClientClinicalDetails = (props) => {
                   label="Remarks (Child)"
                   value={formik.values.remarksChild}
                   onChange={formik.handleChange}
+                  size="small"
                 >
                   <MenuItem value={0}>Select</MenuItem>
                   {childRemarksOptions &&
@@ -599,6 +660,29 @@ const ClientClinicalDetails = (props) => {
                       </MenuItem>
                     ))}
                 </TextField>
+              </Grid>
+              <Grid item md={3} xs={12}>
+                <KeyboardDatePicker
+                  disabled={
+                    parentRemarkSelected === 'Abortion' ||
+                    parentRemarkSelected === 'Still birth' ||
+                    parentRemarkSelected === 'Maternal death' ||
+                    parentRemarkSelected === 'Miscarriage'
+                  }
+                  fullWidth
+                  autoOk
+                  disableFuture={true}
+                  variant="inline"
+                  inputVariant="outlined"
+                  label="Remarks Child Date"
+                  format="dd-MMM-yyyy"
+                  value={formik.values.remarksChildDate}
+                  InputAdornmentProps={{ position: 'end' }}
+                  onChange={(val) => {
+                    formik.setFieldValue('remarksChildDate', val);
+                  }}
+                  size="small"
+                />
               </Grid>
             </MuiPickersUtilsProvider>
           </Grid>
