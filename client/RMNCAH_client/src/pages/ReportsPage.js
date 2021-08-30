@@ -3,6 +3,7 @@ import { Box, Container, Grid } from '@material-ui/core';
 import ClientLongitudinalReportList from 'src/components/reports/ClientLongitudinalReportList';
 import ReportsSummary from 'src/components/reports/ReportsSummary';
 import BasicDateRangePicker from 'src/components/reports/BasicDateRangePicker';
+import Defaulters from 'src/components/reports/Defaulters';
 
 const ReportsPage = () => (
   <>

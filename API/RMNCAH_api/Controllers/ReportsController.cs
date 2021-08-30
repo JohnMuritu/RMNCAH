@@ -78,30 +78,47 @@ namespace RMNCAH_api.Controllers
                     "when edd is not null and delivery_date is not null and DATE_PART('day', edd - delivery_date) > 14 then 'Defaulter' " +
                     "when edd is not null and delivery_date is not null and DATE_PART('day', delivery_date - edd) > 14 then 'Defaulter' " +
                     "when edd is not null and delivery_date is null and DATE_PART('day', CURRENT_DATE - edd) > 14 then 'Defaulter' " +
-                    //"else '' " +
                     "end delivery_defaulter, " +
                     "penta1, " +
                     "case " +
                     "when delivery_date is not null and penta1 is not null and DATE_PART('day', penta1 - delivery_date) > 42 then 'Defaulter' " +
                     "when delivery_date is not null and penta1 is null and DATE_PART('day', CURRENT_DATE - delivery_date) > 42 then 'Defaulter' " +
-                    //"else '' " +
                     "end penta1_defaulter, " +
                     "penta3, " +
                     "case " +
                     "when delivery_date is not null and penta3 is not null and DATE_PART('day', penta3 - delivery_date) > 98 then 'Defaulter' " +
                     "when delivery_date is not null and penta3 is null and DATE_PART('day', CURRENT_DATE - delivery_date) > 98 then 'Defaulter' " +
-                    //"else '' " +
                     "end penta3_defaulter, " +
                     "mr1, " +
                     "case " +
                     "when delivery_date is not null and mr1 is not null and DATE_PART('day', mr1 - delivery_date) > 274 then 'Defaulter' " +
                     "when delivery_date is not null and mr1 is null and DATE_PART('day', CURRENT_DATE - delivery_date) > 274 then 'Defaulter' " +
-                    //"else '' " +
                     "end mr1_defaulter " +
                     "from public.client_details cd " +
                     "inner join public.client_clinical_details ccd on cd.client_id = ccd.client_id " +
                     "inner join public.health_facilities hf on cd.mfl_code = hf.mfl_code " +
-                    "left join public.delivery_options del on del.id = ccd.delivery ";
+                    "left join public.delivery_options del on del.id = ccd.delivery "  +
+                    "where " +
+                    "case " +
+                    "when edd is not null and delivery_date is not null and DATE_PART('day', edd - delivery_date) > 14 then 'Defaulter' " +
+                    "when edd is not null and delivery_date is not null and DATE_PART('day', delivery_date - edd) > 14 then 'Defaulter' " +
+                    "when edd is not null and delivery_date is null and DATE_PART('day', CURRENT_DATE - edd) > 14 then 'Defaulter' " +
+                    "end is not null " +
+                    "or " +
+                    "case " +
+                    "when delivery_date is not null and penta1 is not null and DATE_PART('day', penta1 - delivery_date) > 42 then 'Defaulter' " +
+                    "when delivery_date is not null and penta1 is null and DATE_PART('day', CURRENT_DATE - delivery_date) > 42 then 'Defaulter' " +
+                    "end is not null " +
+                    "or " +
+                    "case " +
+                    "when delivery_date is not null and penta3 is not null and DATE_PART('day', penta3 - delivery_date) > 98 then 'Defaulter' " +
+                    "when delivery_date is not null and penta3 is null and DATE_PART('day', CURRENT_DATE - delivery_date) > 98 then 'Defaulter' " +
+                    "end is not null " +
+                    "or " +
+                    "case " +
+                    "when delivery_date is not null and mr1 is not null and DATE_PART('day', mr1 - delivery_date) > 274 then 'Defaulter' " +
+                    "when delivery_date is not null and mr1 is null and DATE_PART('day', CURRENT_DATE - delivery_date) > 274 then 'Defaulter' " +
+                    "end is not null";
 
                 return _applicationDbContext.Defaulters.FromSqlRaw(sqlQuery).ToList();
             }

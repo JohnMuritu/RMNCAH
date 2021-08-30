@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\bin\Release\net5.0\publish\</_PublishTargetUrl>
+    <History>True|2021-08-30T09:29:28.5460770Z;True|2021-08-29T13:14:42.8379001+03:00;True|2021-08-29T12:57:47.2246385+03:00;</History>
+  </PropertyGroup>
+</Project>

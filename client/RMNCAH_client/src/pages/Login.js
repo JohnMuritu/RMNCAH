@@ -53,7 +53,7 @@ const Login = () => {
       </Helmet>
       <Box
         sx={{
-          backgroundColor: 'background.default',
+          // backgroundColor: 'background.default',
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
@@ -61,6 +61,16 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
+          <Box sx={{ mb: 3 }}>
+            <img
+              alt="Logo"
+              src="/static/logo.jpeg"
+              style={{
+                width: 550
+              }}
+            />
+          </Box>
+
           <Formik
             initialValues={{
               username: '',
@@ -84,11 +94,11 @@ const Login = () => {
               values
             }) => (
               <form onSubmit={handleSubmit}>
-                <Box sx={{ mb: 3 }}>
+                {/* <Box sx={{ mb: 3 }}>
                   <Typography color="textPrimary" variant="h2">
                     Sign in
                   </Typography>
-                </Box>
+                </Box> */}
                 <TextField
                   error={Boolean(touched.username && errors.username)}
                   fullWidth

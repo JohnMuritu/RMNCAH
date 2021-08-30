@@ -51,7 +51,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
-        //[Authorize(Policy = Policies.User)]
+        [Authorize(Policy = Policies.Admin)]
         [HttpGet("chvs")]
         public List<Chvs> getChvs()
         {
@@ -61,7 +61,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
-        // [Authorize(Policy = Policies.User)]
+        [Authorize(Policy = Policies.Admin)]
         [HttpPost("AddChvs")]
         public Chvs AddClientDetails(Chvs cd)
         {
@@ -73,7 +73,7 @@ namespace RMNCAH_api.Controllers
             }
         }
 
-        //[Authorize(Policy = Policies.User)]
+        [Authorize(Policy = Policies.Admin)]
         [HttpPost("UpdateChvs")]
         public Chvs UpdateClientDetails(Chvs cd)
         {

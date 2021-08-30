@@ -10,25 +10,23 @@ import {
   Drawer,
   Hidden,
   List,
-  Typography
+  Typography,
+  ListItem
 } from '@material-ui/core';
+import { ListAlt, AssignmentOutlined, ListOutlined } from '@material-ui/icons';
 import {
-  AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
-  Lock as LockIcon,
-  Settings as SettingsIcon,
-  ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
   UserPlus as UserPlusIcon,
-  Users as UsersIcon,
-  Book
+  List as ListIcon,
+  FilePlus
 } from 'react-feather';
 import NavItem from './NavItem';
 
 const items = [
   {
     href: '/app/registerclient',
-    icon: Book,
+    icon: ListIcon,
     title: 'Clients'
   },
   {
@@ -105,10 +103,54 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
               icon={item.icon}
             />
           ))} */}
-          <NavItem href="/app/registerclient" title="Clients" icon={Book} />
+          <NavItem href="/app/registerclient" title="Clients" icon={ListAlt} />
 
           {(userRole === 'REPORT' || userRole === 'ADMIN') && (
-            <NavItem href="/app/reports" title="Reports" icon={BarChartIcon} />
+            <>
+              {/* <NavItem title="Reports" icon={BarChartIcon} /> */}
+
+              <ListItem
+                disableGutters
+                sx={{
+                  display: 'flex',
+                  py: 0
+                }}
+              >
+                <Button
+                  sx={{
+                    color: 'text.secondary',
+                    fontWeight: 'medium',
+                    justifyContent: 'flex-start',
+                    letterSpacing: 0,
+                    py: 1.25,
+                    textTransform: 'none',
+                    width: '100%',
+                    '& svg': {
+                      mr: 1
+                    }
+                  }}
+                >
+                  <BarChartIcon size="20" />
+
+                  <span>Reports</span>
+                </Button>
+              </ListItem>
+
+              <Divider />
+              <Box sx={{ paddingLeft: 2 }}>
+                <NavItem
+                  href="/app/reports"
+                  title="Follow up register"
+                  icon={ListOutlined}
+                />
+                <NavItem
+                  href="/app/defaulters"
+                  title="Defaulters"
+                  icon={AssignmentOutlined}
+                />
+              </Box>
+              <Divider />
+            </>
           )}
 
           <NavItem href="/app/account" title="Account" icon={UserIcon} />
@@ -118,7 +160,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           )}
 
           {userRole === 'ADMIN' && (
-            <NavItem href="/app/addchv" title="Add CHV" icon={Book} />
+            <NavItem href="/app/addchv" title="Add CHV" icon={FilePlus} />
           )}
         </List>
       </Box>

@@ -23,12 +23,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from '@material-ui/pickers';
-// import Autocomplete from '@material-ui/lab/Autocomplete';
-import { alpha } from '@material-ui/core/styles';
-import moment from 'moment';
 import * as ACTION_TYPES from '../../actions/actions';
-import { date } from 'date-fns/locale/af';
-import { Schema } from '@material-ui/icons';
 
 const ClientDetails = (props) => {
   const dispatch = useDispatch();

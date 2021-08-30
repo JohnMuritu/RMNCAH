@@ -1,6 +1,10 @@
-import React, { Fragment, useState } from "react";
-import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import React, { useState } from 'react';
+import {
+  DatePicker,
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 function InlineDatePickerDemo(props) {
   const [selectedDate, handleDateChange] = useState(new Date());
@@ -30,8 +34,8 @@ function InlineDatePickerDemo(props) {
         label="With keyboard"
         format="MM/dd/yyyy"
         value={selectedDate}
-        InputAdornmentProps={{ position: "start" }}
-        onChange={date => handleDateChange(date)}
+        InputAdornmentProps={{ position: 'start' }}
+        onChange={(date) => handleDateChange(date)}
       />
     </MuiPickersUtilsProvider>
   );

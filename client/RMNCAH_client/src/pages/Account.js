@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet';
 import { Box, Container, Grid } from '@material-ui/core';
 import AccountProfile from 'src/components/account/AccountProfile';
 import AccountProfileDetails from 'src/components/account/AccountProfileDetails';
-import SettingsPassword from 'src/components/settings/SettingsPassword';
+import SettingsPassword from 'src/components/account/SettingsPassword';
 
 const Account = () => (
   <>
