@@ -17,8 +17,8 @@ using System.Threading.Tasks;
 
 namespace RMNCAH_api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/user")]
     public class UserController : ControllerBase
     {
         private readonly JwtSettings _jwtSettings;

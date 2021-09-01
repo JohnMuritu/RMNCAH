@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 
 namespace RMNCAH_api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/reports")]
     public class ReportsController : ControllerBase
     {
         private readonly ApplicationDBContext _applicationDbContext;

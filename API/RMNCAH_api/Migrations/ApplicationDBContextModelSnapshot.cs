@@ -369,13 +369,13 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("delivery")
                         .HasColumnType("text");
 
-                    b.Property<string>("deliveryDefaulter")
-                        .HasColumnName("delivery_defaulter")
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("delivery_date")
                         .HasColumnName("delivery_date")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("delivery_defaulter")
+                        .HasColumnName("delivery_defaulter")
+                        .HasColumnType("text");
 
                     b.Property<string>("dept_client_id")
                         .HasColumnName("dept_client_id")
@@ -397,24 +397,24 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("mr1")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("mr1Defaulter")
-                        .HasColumnName("mr1defaulter")
+                    b.Property<string>("mr1_defaulter")
+                        .HasColumnName("mr1_defaulter")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("penta1")
                         .HasColumnName("penta1")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("penta1Defaulter")
-                        .HasColumnName("penta1defaulter")
+                    b.Property<string>("penta1_defaulter")
+                        .HasColumnName("penta1_defaulter")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("penta3")
                         .HasColumnName("penta3")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("penta3Defaulter")
-                        .HasColumnName("penta3defaulter")
+                    b.Property<string>("penta3_defaulter")
+                        .HasColumnName("penta3_defaulter")
                         .HasColumnType("text");
 
                     b.HasKey("ClientClinicalDetailsId")
@@ -457,21 +457,21 @@ namespace RMNCAH_api.Migrations
                         new
                         {
                             Id = "2bb88694-a613-4cb1-b540-61b86713a098",
-                            ConcurrencyStamp = "86058ec6-635c-4904-b3f0-07d96861ad99",
+                            ConcurrencyStamp = "57c92f93-50c5-45e2-b50f-b4026aa4b4a2",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b0ffd149-2abf-40e8-b49f-a58383146684",
-                            ConcurrencyStamp = "7e4f7d86-d5a5-4a14-9b7d-aa31fa345070",
+                            Id = "72e01fca-ebdb-49bc-b379-3bba3c740b13",
+                            ConcurrencyStamp = "f57ede2f-7829-4fce-baf2-7d8f042e9b88",
                             Name = "REPORT",
                             NormalizedName = "REPORT"
                         },
                         new
                         {
-                            Id = "029f93f3-4a32-4508-8620-072745a1d54f",
-                            ConcurrencyStamp = "cf440651-d6ec-492c-8287-ec08cb345836",
+                            Id = "0ada5ef0-d21b-43cc-a34a-c64cbd0e2f60",
+                            ConcurrencyStamp = "2553aa91-3bb5-4a7c-ae91-cce34dd8561a",
                             Name = "USER",
                             NormalizedName = "USER"
                         });
@@ -613,7 +613,7 @@ namespace RMNCAH_api.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             ChangePassword = 0,
-                            ConcurrencyStamp = "1e32cb06-d162-4af5-b579-042786b8957a",
+                            ConcurrencyStamp = "9de19191-7f30-4b14-9e9c-7aa9f80cc782",
                             Email = "admin@myemail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -622,7 +622,7 @@ namespace RMNCAH_api.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYEMAIL.COM",
                             NormalizedUserName = "ADMIN@MYEMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECwGaQrwyS2Pf5XMiXmQnCPAkIsD/gEAc1k42YzzjMu9S04iT5WBB0JbncdgQlzmTw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBs93+IOCYSV2uifWW4Kw3HhxWEY4TQRfjSfruL03CcdXN3o2MVawTpp+sYbvmEzmg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

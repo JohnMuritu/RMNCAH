@@ -35,6 +35,20 @@ namespace RMNCAH_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "chvs",
+                columns: table => new
+                {
+                    chv_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    chv_name = table.Column<string>(nullable: true),
+                    active = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_chvs", x => x.chv_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "client_details_and_clinical_report_data",
                 columns: table => new
                 {
@@ -85,6 +99,30 @@ namespace RMNCAH_api.Migrations
                 },
                 constraints: table =>
                 {
+                });
+
+            migrationBuilder.CreateTable(
+                name: "defaulters",
+                columns: table => new
+                {
+                    client_clinical_details_id = table.Column<Guid>(nullable: false),
+                    full_names = table.Column<string>(nullable: true),
+                    dept_client_id = table.Column<string>(nullable: true),
+                    facility_name = table.Column<string>(nullable: true),
+                    edd = table.Column<DateTime>(nullable: true),
+                    delivery = table.Column<string>(nullable: true),
+                    delivery_date = table.Column<DateTime>(nullable: true),
+                    delivery_defaulter = table.Column<string>(nullable: true),
+                    penta1 = table.Column<DateTime>(nullable: true),
+                    penta1_defaulter = table.Column<string>(nullable: true),
+                    penta3 = table.Column<DateTime>(nullable: true),
+                    penta3_defaulter = table.Column<string>(nullable: true),
+                    mr1 = table.Column<DateTime>(nullable: true),
+                    mr1_defaulter = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_defaulters", x => x.client_clinical_details_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,12 +227,15 @@ namespace RMNCAH_api.Migrations
                     anc5 = table.Column<DateTime>(nullable: true),
                     edd = table.Column<DateTime>(nullable: true),
                     remarks_parent = table.Column<int>(nullable: true),
+                    remarks_parent_date = table.Column<DateTime>(nullable: true),
                     delivery = table.Column<int>(nullable: true),
+                    delivery_date = table.Column<DateTime>(nullable: true),
                     penta1 = table.Column<DateTime>(nullable: true),
                     penta2 = table.Column<DateTime>(nullable: true),
                     penta3 = table.Column<DateTime>(nullable: true),
                     mr1 = table.Column<DateTime>(nullable: true),
                     remarks_child = table.Column<int>(nullable: true),
+                    remarks_child_date = table.Column<DateTime>(nullable: true),
                     created_by = table.Column<string>(nullable: true),
                     created_date = table.Column<DateTime>(nullable: false),
                     updated_by = table.Column<string>(nullable: true),
@@ -228,7 +269,7 @@ namespace RMNCAH_api.Migrations
                 columns: table => new
                 {
                     client_id = table.Column<Guid>(nullable: false),
-                    chv_name = table.Column<string>(nullable: true),
+                    chv_id = table.Column<int>(nullable: false),
                     dept_client_id = table.Column<string>(nullable: true),
                     full_names = table.Column<string>(nullable: true),
                     dob = table.Column<DateTime>(nullable: false),
@@ -247,6 +288,12 @@ namespace RMNCAH_api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_client_details", x => x.client_id);
+                    table.ForeignKey(
+                        name: "fk_client_details_chvs_chv_id",
+                        column: x => x.chv_id,
+                        principalTable: "chvs",
+                        principalColumn: "chv_id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_client_details_health_facility_mfl_code",
                         column: x => x.mfl_code,
@@ -392,15 +439,15 @@ namespace RMNCAH_api.Migrations
                 columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
                 values: new object[,]
                 {
-                    { "2bb88694-a613-4cb1-b540-61b86713a098", "284ae6e6-7366-47d2-9cb3-9ee837313d71", "ADMIN", "ADMIN" },
-                    { "cb85f759-ef4d-4f06-87ce-4d4857f4815d", "30483cad-ce09-469e-b469-95f03fe030b8", "REPORT", "REPORT" },
-                    { "be564fa1-4e18-4f69-9cf2-449907b3e6ab", "32729835-d6da-41b1-9b0f-076a19ed9409", "USER", "USER" }
+                    { "2bb88694-a613-4cb1-b540-61b86713a098", "57c92f93-50c5-45e2-b50f-b4026aa4b4a2", "ADMIN", "ADMIN" },
+                    { "72e01fca-ebdb-49bc-b379-3bba3c740b13", "f57ede2f-7829-4fce-baf2-7d8f042e9b88", "REPORT", "REPORT" },
+                    { "0ada5ef0-d21b-43cc-a34a-c64cbd0e2f60", "2553aa91-3bb5-4a7c-ae91-cce34dd8561a", "USER", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "users",
                 columns: new[] { "id", "access_failed_count", "active", "change_password", "concurrency_stamp", "email", "email_confirmed", "first_name", "job_title", "last_name", "lockout_enabled", "lockout_end", "normalized_email", "normalized_user_name", "password_hash", "phone_number", "phone_number_confirmed", "security_stamp", "two_factor_enabled", "user_name" },
-                values: new object[] { "46ba742f-f729-4bb3-81f3-ad4e07c9cd30", 0, true, 0, "29a64c5a-f819-454e-8583-2aaed81d5eef", "admin@myemail.com", true, "Admin", "System Administrator", "Admin", false, null, "ADMIN@MYEMAIL.COM", "ADMIN@MYEMAIL.COM", "AQAAAAEAACcQAAAAEBf82WaxkkXjdsRRfTviDrPDNe7fCY4wbkNVodf9ZEb8H6dht/lHMeO00G1eSjCP2A==", null, false, "", false, "admin@myemail.com" });
+                values: new object[] { "46ba742f-f729-4bb3-81f3-ad4e07c9cd30", 0, true, 0, "9de19191-7f30-4b14-9e9c-7aa9f80cc782", "admin@myemail.com", true, "Admin", "System Administrator", "Admin", false, null, "ADMIN@MYEMAIL.COM", "ADMIN@MYEMAIL.COM", "AQAAAAEAACcQAAAAEBs93+IOCYSV2uifWW4Kw3HhxWEY4TQRfjSfruL03CcdXN3o2MVawTpp+sYbvmEzmg==", null, false, "", false, "admin@myemail.com" });
 
             migrationBuilder.InsertData(
                 table: "user_roles",
@@ -421,6 +468,11 @@ namespace RMNCAH_api.Migrations
                 name: "ix_client_clinical_details_remarks_parent",
                 table: "client_clinical_details",
                 column: "remarks_parent");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_client_details_chv_id",
+                table: "client_details",
+                column: "chv_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_client_details_mfl_code",
@@ -480,6 +532,9 @@ namespace RMNCAH_api.Migrations
                 name: "clinical_aggregated_summary");
 
             migrationBuilder.DropTable(
+                name: "defaulters");
+
+            migrationBuilder.DropTable(
                 name: "role_claims");
 
             migrationBuilder.DropTable(
@@ -505,6 +560,9 @@ namespace RMNCAH_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "adult_remarks_options");
+
+            migrationBuilder.DropTable(
+                name: "chvs");
 
             migrationBuilder.DropTable(
                 name: "health_facilities");

@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace RMNCAH_api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/healthfacility")]
     public class HealthFacilityController : ControllerBase
     {
         private readonly ApplicationDBContext _applicationDbContext;

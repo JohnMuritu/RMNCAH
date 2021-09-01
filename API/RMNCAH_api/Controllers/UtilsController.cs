@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace RMNCAH_api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/utils")]
     public class UtilsController : ControllerBase
     {
         private readonly ApplicationDBContext _applicationDbContext;

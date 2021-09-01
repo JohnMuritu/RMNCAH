@@ -7,7 +7,7 @@ import SettingsPassword from 'src/components/account/SettingsPassword';
 const Account = () => (
   <>
     <Helmet>
-      <title>Account | Material Kit</title>
+      <title>Account | RMNCAH</title>
     </Helmet>
     <Box
       sx={{

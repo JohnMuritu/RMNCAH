@@ -69,7 +69,6 @@ C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\bin\Debug\net5.0\Npgsql.dll
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\bin\Debug\net5.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\bin\Debug\net5.0\Serilog.dll
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
-C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\RMNCAH_api.csprojAssemblyReference.cache
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\RMNCAH_api.GeneratedMSBuildEditorConfig.editorconfig
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\RMNCAH_api.AssemblyInfoInputs.cache
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\RMNCAH_api.AssemblyInfo.cs
@@ -84,3 +83,4 @@ C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\RMNCAH_api.dll
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\ref\RMNCAH_api.dll
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\RMNCAH_api.pdb
 C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\RMNCAH_api.genruntimeconfig.cache
+C:\Projects\Goldstar\RMNCAH\API\RMNCAH_api\obj\Debug\net5.0\RMNCAH_api.csprojAssemblyReference.cache

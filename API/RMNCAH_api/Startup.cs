@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using RMNCAH_api.Data;
@@ -22,7 +23,7 @@ namespace RMNCAH_api
 {
     public class Startup
     {
-        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        //readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,13 +37,12 @@ namespace RMNCAH_api
             // configure CORS
             services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowSpecificOrigins,
+                options.AddDefaultPolicy(
                     builder =>
                     {
                         builder.AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader();
-                        //builder.WithOrigins("http://localhost:3000", "https://localhost:3001");
                     });
             });
 
@@ -88,6 +88,19 @@ namespace RMNCAH_api
             //token lifespan - e.g. for tokens sent to users to change pwd
             services.Configure<DataProtectionTokenProviderOptions>(o =>
                 o.TokenLifespan = TimeSpan.FromHours(2));
+
+
+            if (HostingEnvironment.IsProduction())
+            {
+                services.AddSpaStaticFiles(configuration =>
+              configuration.RootPath = "ClientApp");
+            }
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,13 +109,13 @@ namespace RMNCAH_api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-
-            app.UseCors(MyAllowSpecificOrigins);
+            }            
 
             app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 
@@ -112,6 +125,15 @@ namespace RMNCAH_api
             {
                 endpoints.MapControllers();
             });
-        }
+
+
+            if (env.IsProduction())
+            {
+                app.UseSpaStaticFiles();
+                app.UseSpa(spa =>
+                {
+                    spa.Options.DefaultPage = "/index.html";
+                });
+            }
     }
 }

@@ -13,8 +13,8 @@ using System.Security.Claims;
 
 namespace RMNCAH_api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("api/client")]
     public class ClientController : ControllerBase
     {
         private readonly ApplicationDBContext _applicationDbContext;

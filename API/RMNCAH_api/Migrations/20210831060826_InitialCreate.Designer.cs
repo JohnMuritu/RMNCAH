@@ -10,7 +10,7 @@ using RMNCAH_api.Data;
 namespace RMNCAH_api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20210823071443_InitialCreate")]
+    [Migration("20210831060826_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,10 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("delivery")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("deliveryDate")
+                        .HasColumnName("delivery_date")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<DateTime?>("edd")
                         .HasColumnName("edd")
                         .HasColumnType("timestamp without time zone");
@@ -100,9 +104,17 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("remarks_child")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("remarksChildDate")
+                        .HasColumnName("remarks_child_date")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<int?>("remarksParent")
                         .HasColumnName("remarks_parent")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime?>("remarksParentDate")
+                        .HasColumnName("remarks_parent_date")
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("ClientClinicalDetailsId")
                         .HasName("pk_client_clinical_details");
@@ -170,9 +182,9 @@ namespace RMNCAH_api.Migrations
                         .HasColumnName("village")
                         .HasColumnType("text");
 
-                    b.Property<string>("chvName")
-                        .HasColumnName("chv_name")
-                        .HasColumnType("text");
+                    b.Property<int>("chv_id")
+                        .HasColumnName("chv_id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("deptClientId")
                         .HasColumnName("dept_client_id")
@@ -188,6 +200,9 @@ namespace RMNCAH_api.Migrations
 
                     b.HasKey("ClientId")
                         .HasName("pk_client_details");
+
+                    b.HasIndex("chv_id")
+                        .HasName("ix_client_details_chv_id");
 
                     b.HasIndex("mfl_code")
                         .HasName("ix_client_details_mfl_code");
@@ -345,6 +360,71 @@ namespace RMNCAH_api.Migrations
                     b.ToTable("clinical_aggregated_summary");
                 });
 
+            modelBuilder.Entity("RMNCAH_api.Models.Reports.Defaulters", b =>
+                {
+                    b.Property<Guid>("ClientClinicalDetailsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("client_clinical_details_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("delivery")
+                        .HasColumnName("delivery")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("delivery_date")
+                        .HasColumnName("delivery_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("delivery_defaulter")
+                        .HasColumnName("delivery_defaulter")
+                        .HasColumnType("text");
+
+                    b.Property<string>("dept_client_id")
+                        .HasColumnName("dept_client_id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("edd")
+                        .HasColumnName("edd")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("facility_name")
+                        .HasColumnName("facility_name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("full_names")
+                        .HasColumnName("full_names")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("mr1")
+                        .HasColumnName("mr1")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("mr1_defaulter")
+                        .HasColumnName("mr1_defaulter")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("penta1")
+                        .HasColumnName("penta1")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("penta1_defaulter")
+                        .HasColumnName("penta1_defaulter")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("penta3")
+                        .HasColumnName("penta3")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("penta3_defaulter")
+                        .HasColumnName("penta3_defaulter")
+                        .HasColumnType("text");
+
+                    b.HasKey("ClientClinicalDetailsId")
+                        .HasName("pk_defaulters");
+
+                    b.ToTable("defaulters");
+                });
+
             modelBuilder.Entity("RMNCAH_api.Models.Security.Role", b =>
                 {
                     b.Property<string>("Id")
@@ -379,21 +459,21 @@ namespace RMNCAH_api.Migrations
                         new
                         {
                             Id = "2bb88694-a613-4cb1-b540-61b86713a098",
-                            ConcurrencyStamp = "284ae6e6-7366-47d2-9cb3-9ee837313d71",
+                            ConcurrencyStamp = "57c92f93-50c5-45e2-b50f-b4026aa4b4a2",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "cb85f759-ef4d-4f06-87ce-4d4857f4815d",
-                            ConcurrencyStamp = "30483cad-ce09-469e-b469-95f03fe030b8",
+                            Id = "72e01fca-ebdb-49bc-b379-3bba3c740b13",
+                            ConcurrencyStamp = "f57ede2f-7829-4fce-baf2-7d8f042e9b88",
                             Name = "REPORT",
                             NormalizedName = "REPORT"
                         },
                         new
                         {
-                            Id = "be564fa1-4e18-4f69-9cf2-449907b3e6ab",
-                            ConcurrencyStamp = "32729835-d6da-41b1-9b0f-076a19ed9409",
+                            Id = "0ada5ef0-d21b-43cc-a34a-c64cbd0e2f60",
+                            ConcurrencyStamp = "2553aa91-3bb5-4a7c-ae91-cce34dd8561a",
                             Name = "USER",
                             NormalizedName = "USER"
                         });
@@ -535,7 +615,7 @@ namespace RMNCAH_api.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             ChangePassword = 0,
-                            ConcurrencyStamp = "29a64c5a-f819-454e-8583-2aaed81d5eef",
+                            ConcurrencyStamp = "9de19191-7f30-4b14-9e9c-7aa9f80cc782",
                             Email = "admin@myemail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -544,7 +624,7 @@ namespace RMNCAH_api.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYEMAIL.COM",
                             NormalizedUserName = "ADMIN@MYEMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBf82WaxkkXjdsRRfTviDrPDNe7fCY4wbkNVodf9ZEb8H6dht/lHMeO00G1eSjCP2A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBs93+IOCYSV2uifWW4Kw3HhxWEY4TQRfjSfruL03CcdXN3o2MVawTpp+sYbvmEzmg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -765,6 +845,28 @@ namespace RMNCAH_api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RMNCAH_api.Models.Utils.Chvs", b =>
+                {
+                    b.Property<int>("chv_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("chv_id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("active")
+                        .HasColumnName("active")
+                        .HasColumnType("text");
+
+                    b.Property<string>("chv_name")
+                        .HasColumnName("chv_name")
+                        .HasColumnType("text");
+
+                    b.HasKey("chv_id")
+                        .HasName("pk_chvs");
+
+                    b.ToTable("chvs");
+                });
+
             modelBuilder.Entity("RMNCAH_api.Models.Utils.DeliveryOptions", b =>
                 {
                     b.Property<int>("id")
@@ -838,6 +940,13 @@ namespace RMNCAH_api.Migrations
 
             modelBuilder.Entity("RMNCAH_api.Models.Client.ClientDetails", b =>
                 {
+                    b.HasOne("RMNCAH_api.Models.Utils.Chvs", "chv")
+                        .WithMany()
+                        .HasForeignKey("chv_id")
+                        .HasConstraintName("fk_client_details_chvs_chv_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("RMNCAH_api.Models.Utils.HealthFacilities", "HFLinked")
                         .WithMany()
                         .HasForeignKey("mfl_code")
